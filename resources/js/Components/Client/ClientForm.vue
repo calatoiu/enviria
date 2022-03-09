@@ -202,7 +202,7 @@ DataExpirareAutorizatie: null
 <!-- Data Contract -->
                     <div class="flex-auto pr-4 basis-2/3">
                         <div class="flex items-end pb-0.5">
-                            <Label class="flex-none" for="datacontract" value="Data" />
+                            <Label class="flex-none" for="datacontract" value="Data contract" />
                         </div>
                         <Datepicker
                             name="datacontract" id="datacontract"
