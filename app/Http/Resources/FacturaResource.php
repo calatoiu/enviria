@@ -20,7 +20,7 @@ class FacturaResource extends JsonResource
         if($this->resource) {
             unset($result['Continut']);
             $result['Interval'] = RODate::getIntervalLuni($this->LunaIni, $this->LunaFin);
-            $result['Sold'] = $this->Sold;
+ //           $result['Sold'] = $this->Sold;
         }
 //dd($result);
          return $result;

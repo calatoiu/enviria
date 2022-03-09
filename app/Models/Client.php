@@ -40,8 +40,13 @@ class Client extends Model
     {
         return $this->hasMany(Factura::class, 'CUI', 'CIF')
             ->orderBy('SerieNumar', 'DESC')
-            ->select(['SerieNumar', 'Data', 'Valoare', 'LunaIni', 'LunaFin']);
-
+            ->select(['SerieNumar', 'Data', 'Valoare', 'LunaIni', 'LunaFin'])->addSelect(
+                ['Sold' => function ($query) {
+                    $query->selectRaw('factura.Valoare - ifnull(SUM(decontare.Suma),0)')
+                        ->from('decontare')
+                        ->whereColumn('decontare.SerieNumarFactura', 'factura.SerieNumar');
+                }]
+            );
     }
 
     public function facturineachitate()

@@ -50,9 +50,10 @@ class Factura extends Model
 
     public function getSoldAttribute()
     {
+        return 0;
         $decontari = $this->decontari();
         $nrdec = $decontari->get()->count();
-        $docSelect = $decontari->selectRaw('decontare.SerieNumarFactura, SUM(decontare.Suma) as decontat')
+        $docSelect = $decontari->selectRaw('decontare.SerieNumarFactura, ifnull(SUM(decontare.Suma),0) as decontat')
                                 ->groupBy('decontare.SerieNumarFactura');
      //   dd($decSelect);
      //   DB::enableQueryLog();
