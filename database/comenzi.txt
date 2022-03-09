@@ -1,0 +1,21 @@
+
+composer require krlove/eloquent-model-generator --dev
+php artisan krlove:generate:model Client --output-path=Models --namespace=App\Models --table-name=clienti
+
+
+// bennett-treptow/laravel-migration-generator
+php artisan generate:migrations
+
+
+php artisan migrate
+
+php artisan make:seeder FurnizorSeeder
+php artisan db:seed --class=FurnizorSeeder
+
+php artisan make:migration updateClienti
+
+
+
+php artisan make:controller Api/ClientController --resource --api --model=Client
+php artisan make:resource ClientResource
+php artisan make:request ClientRequest

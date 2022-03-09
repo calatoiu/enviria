@@ -1,0 +1,41 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "devDependencies": {
+        "@heroicons/vue": "^1.0.4",
+        "@inertiajs/inertia": "^0.10.0",
+        "@inertiajs/inertia-vue3": "^0.5.1",
+        "@inertiajs/progress": "^0.2.6",
+        "@tailwindcss/forms": "^0.4.0",
+        "@types/file-saver": "^2.0.5",
+        "@vue/babel-plugin-jsx": "^1.1.0",
+        "@vue/compiler-sfc": "^3.0.5",
+        "@vueuse/core": "^6.5.3",
+        "alpinejs": "^3.4.2",
+        "autoprefixer": "^10.3.7",
+        "axios": "^0.21",
+        "laravel-mix": "^6.0.6",
+        "lodash": "^4.17.19",
+        "perfect-scrollbar": "^1.5.2",
+        "postcss": "^8.3.9",
+        "postcss-import": "^14.0.2",
+        "tailwindcss": "^3.0.7",
+        "vue": "^3.0.5",
+        "vue-loader": "^16.1.2"
+    },
+    "dependencies": {
+        "file-saver": "^2.0.5",
+        "ibantools": "^4.1.4",
+        "moment": "^2.29.1",
+        "vee-validate": "^4.5.8",
+        "vue3-date-time-picker": "^2.6.0"
+    }
+}
