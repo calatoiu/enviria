@@ -3,7 +3,8 @@
         <p
             class="flex items-center justify-center gap-1 text-sm text-gray-600 dark:text-gray-400"
         >
-            <span>Made with</span>
+<span>Footer</span>
+            <!-- <span>Made with</span>
             <span>
                 <HeartIcon class="w-6 h-6 text-red-500" />
             </span>
@@ -14,7 +15,7 @@
                 class="text-blue-600 hover:underline"
             >
                 Ahmed Kamelx
-            </a>
+            </a> -->
         </p>
     </footer>
 </template>

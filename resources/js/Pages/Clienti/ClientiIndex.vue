@@ -15,7 +15,7 @@
                         iconOnly
                         variant="primary"
                         type="button"
-                        @click="adaugaClient()"
+                        @click="adaugaClientCUI"
                         v-slot="{ iconSizeClasses }"
                         srText="Adaugă un nou client"
                         size="lg"
@@ -45,11 +45,14 @@
                     </tbody>
                 </table>
             </div>
+            <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenCUIForm">
+                <CUIForm  @close="closeCUIForm" @add="adaugaClient"/>
+            </div>
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenClientForm">
-                <ClientForm :client="currentClient" :furnizori="furnizori" :anaf="currentAnaf" :editMode="true" :errors="errors" @close="closeClientForm" @save="saveClient"/>
+                <ClientForm :client="currentEditClient" :furnizori="furnizori" :anaf="currentAnaf" :editMode="editMode" :errors="errors" @close="closeClientForm" @save="saveClient"/>
             </div>
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenClientView">
-                <ClientView :client="currentClient" :facturi="currentFacturi" @close="closeClientView" @edit="editClient()"  @adaugafactura="adaugaFactura" @viewfactura="viewFactura" />
+                <ClientView :message="viewFormMsg" :client="currentClient" :facturi="currentFacturi" @close="closeClientView" @edit="editClient()"  @adaugafactura="adaugaFactura" @viewfactura="viewFactura" />
             </div>
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenFacturaView">
                 <FacturaView :facturahtml="currentFacturaHTML" :SerieNumar = "currentSerieNumar" @edit="editFactura(currentSerieNumar)"   @close="closeFacturaView"  />
@@ -71,6 +74,7 @@ import InputIconWrapper    from '@/Components/InputIconWrapper'
 import Input               from '@/Components/Input'
 import AuthenticatedLayout from '@/Layouts/Authenticated'
 
+import CUIForm  from '@/Components/Client/CUIForm'
 import ClientForm  from '@/Components/Client/ClientForm'
 import ClientView  from '@/Components/Client/ClientView'
 import FacturaView from '@/Components/Factura/FacturaView'
@@ -108,21 +112,25 @@ const isProcessing = ref(false)
 //=================
 
 const currentClient = ref({})
+const currentEditClient = ref({})
 const currentAnaf = ref({})
 const cClient = ref({})
 const isOpenClientView = ref(false)
 const currentFacturi = ref({})
 const furnizori = ref({})
+const viewFormMsg = ref('')
 
-
-const viewClient = async (client)=>{
+const viewClient = async (client, msg = '')=>{
     isProcessing.value = true
     cClient.value = client
     currentClient.value =  await getClient(client.CIF)
+    var furnizor = furnizori.value.find((fr) => fr.id == currentClient.value.Furnizor)
+    if (furnizor)
+        currentClient.value.FurnizorDen = furnizor.Denumire
     currentFacturi.value =  await getFacturi(client.CIF)
+    viewFormMsg.value = msg
     isOpenClientView.value = true
     isProcessing.value = false
-
 }
 
 const closeClientView = ()=>{
@@ -136,7 +144,7 @@ const editClient = async ()=>{
     isProcessing.value = true
     console.log('editClient:cClient ' + cClient.value.Denumire)
     currentAnaf.value =  await getAnaf(cClient.value.CIF)
-    currentClient.value = await getClient(cClient.value.CIF)
+    currentEditClient.value = await getClient(cClient.value.CIF)
     editMode.value = true;
     isOpenClientView.value = false
     isOpenClientForm.value = true
@@ -144,31 +152,79 @@ const editClient = async ()=>{
 }
 
 const saveClient = ()=>{
-    updateClient().then(() => {
-        if (!errors.value) {
-            if (cClient.value.Denumire != currentClient.value.Denumire){
-                cClient.value.Denumire = currentClient.value.Denumire
+    if (editMode.value) {
+// Modificare
+        updateClient().then(() => {
+            if (!errors.value) {
+                if (cClient.value.Denumire != currentEditClient.value.Denumire){
+                    cClient.value.Denumire = currentEditClient.value.Denumire
+                    props.clienti.sort((a,b) => {
+                        if (a.Denumire < b.Denumire){ return -1}
+                        if (a.Denumire > b.Denumire){ return 1}
+                        return 0})
+                    currentClient.value = currentEditClient.value
+                }
+                reset();
+                editMode.value = false;
+                closeClientForm();
             }
-            reset();
-            editMode.value = false;
-            closeClientForm();
-        }
-    })
+        })
+    } else {
+// Adaugare
+        addClient().then(() => {
+            if (!errors.value) {
+                var newclient = {'CIF': currentEditClient.value.CIF, 'Denumire': currentEditClient.value.Denumire}
+                props.clienti.push(newclient)
+                props.clienti.sort((a,b) => {
+                        if (a.Denumire < b.Denumire){ return -1}
+                        if (a.Denumire > b.Denumire){ return 1}
+                        return 0})
+                reset();
+                editMode.value = false;
+                isOpenClientForm.value = false
+                isOpenClientView.value = false
+                isOpenCUIForm.value = false
+            }
+        })
+    }
 }
 
 const errors = ref('')
 const updateClient = async () => {
     errors.value = ''
     try {
-        const res =await axios.put('/api/clienti/' + currentClient.value.CIF, currentClient.value)
+        const res =await axios.put('/api/clienti/' + currentEditClient.value.CIF, currentEditClient.value)
     } catch (e) {
-        console.log (e.response.data.errors)
+ //       console.log ('EROARE:', e)
+         errors.value = 'Status:' + e.response.status + '; '
+        if (e.response.status === 500) {
+            errors.value += e.response.data.message
+        }
         if (e.response.status === 422) {
-            errors.value = e.response.data.errors
+            for (const key in e.response.data.errors) {
+                errors.value += e.response.data.errors[key][0] + ' ';
+            }
         }
     }
 }
 
+const addClient = async () => {
+    errors.value = ''
+    try {
+        const res =await axios.put('/api/addclient', currentEditClient.value)
+    } catch (e) {
+ //       console.log ('EROARE:', e)
+         errors.value = 'Status:' + e.response.status + '; '
+        if (e.response.status === 500) {
+            errors.value += e.response.data.message
+        }
+        if (e.response.status === 422) {
+            for (const key in e.response.data.errors) {
+                errors.value += e.response.data.errors[key][0] + ' ';
+            }
+        }
+    }
+}
 
 const closeClientForm = ()=>{
     isOpenClientForm.value = false
@@ -176,10 +232,38 @@ const closeClientForm = ()=>{
     reset()
 }
 
-const adaugaClient = ()=>{
-    isOpenClientForm.value = true
+const adaugaClient = async (CUI)=>{
+    isProcessing.value = true
+    console.log('adaugaClient' + CUI)
+    var client = props.clienti.find((cl) => cl.CIF == CUI )
+//    currentClient.value = await getClient(CUI)
+    if (client){
+        viewClient(client, 'Acest client există deja în baza de date')
+    } else {
+        currentAnaf.value =  await getAnaf(CUI)
+        currentEditClient.value = await getClientFromAnaf(CUI)
+        editMode.value = false;
+        isOpenCUIForm.value = false
+        isOpenClientView.value = false
+        isOpenClientForm.value = true
+        isProcessing.value = false
+    }
 }
 
+const isOpenCUIForm = ref(false)
+const adaugaClientCUI = ()=>{
+    isOpenCUIForm.value = true
+}
+
+const closeCUIForm = ()=>{
+    isOpenCUIForm.value = false
+}
+
+
+const getClientFromAnaf = async (CIF) => {
+    let response = await axios.get('/api/newclientfromanaf/' + CIF)
+    return response.data.data
+}
 
 const getClient = async (CIF) => {
     let response = await axios.get('/api/clienti/' + CIF)

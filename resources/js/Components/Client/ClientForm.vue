@@ -13,14 +13,15 @@
     </div>
     <Form class="bg-white dark:bg-dark-eval-1">
         <div class="px-4 pt-5 pb-4 bg-white dark:bg-dark-eval-1 sm:p-6 sm:pb-4">
-            <h3 class="pb-4 text-center">Actualizare client - {{props.client.CIF}} </h3>
+            <h3 v-if="props.editMode" class="pb-4 text-center">Modificare client - {{props.client.CIF}} </h3>
+            <h3 v-else class="pb-4 text-center">Adaugare client - {{props.client.CIF}} </h3>
             <div class="flex gap-y-3.5 justify-items-start flex-row flex-wrap items-end justify-between">
                 <!-- Denumire -->
                 <div class="flex-auto pr-4 basis-2/3">
                     <div class="flex items-end pb-0.5">
                         <Label class="flex-none" for="denumire" value="Denumire" />
                         <div class="flex-initial pl-3" >
-                            <fieldset class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
+                            <fieldset v-if="props.client.Denumire != props.anaf.Denumire" class="flex border border-gray-200 border-solid rounded dark:border-gray-600">
                                 <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
                                     <div class="px-0.5 italic" > ANAF </div>
                                 </legend>
@@ -55,7 +56,7 @@
                     <div class="flex items-end pb-0.5">
                         <Label class="flex-none" for="judet" value="Județ" />
                         <div class="flex-initial pl-3" >
-                            <fieldset class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
+                            <fieldset v-if="props.client.Judet != props.anaf.Judet" class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
                                 <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
                                     <div class="px-0.5 italic" > ANAF </div>
                                 </legend>
@@ -80,7 +81,7 @@
                     <div class="flex items-end pb-0.5">
                         <Label class="flex-none" for="sediu" value="Sediu" />
                         <div class="flex-initial pl-3" >
-                            <fieldset class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
+                            <fieldset v-if="props.client.Sediu != props.anaf.Sediu" class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
                                 <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
                                     <div class="px-0.5 italic" > ANAF </div>
                                 </legend>
@@ -106,7 +107,7 @@
                     <div class="flex items-end pb-0.5">
                         <Label class="flex-none" for="nrregcom" value="Reg com" />
                         <div class="flex-initial pl-3" >
-                            <fieldset class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
+                            <fieldset v-if="props.client.NrRegCom != props.anaf.NrRegCom" class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
                                 <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
                                     <div class="px-0.5 italic" > ANAF </div>
                                 </legend>
@@ -124,7 +125,7 @@
                         <InputVee withIcon name="nrregcom" id="nrregcom" type="text" class="block w-full" placeholder="Nr Reg Com" v-model="props.client.NrRegCom" :rules="validateJudet"/>
                     </InputIconWrapper>
                     <ErrorMessage class="text-sm text-red-700" name="nrregcom" />
-                </div>  <!--  NrReCom end -->
+                </div>  <!--  NrRegCom end -->
 
                <!-- Banca -->
                 <div class="flex-auto pr-4 basis-1/3">
@@ -153,29 +154,6 @@
                     </InputIconWrapper>
                     <ErrorMessage class="text-sm text-red-700" name="contbancar" />
                 </div>  <!--  ContBancar end -->
-
-<!--
-CIF: 35236846
-Denumire: "ASCLEPIOS MEDICAL HEALTH"
-NrRegCom: "J13/2463/2015"
-RO: "RO"
-Sediu: "Constanta, str. Prelungirea Bucovinei nr.8B"
-Judet: "Constanta"
-Banca: "Unicredit BANK"
-ContBancar: ""
-
-Furnizor: "MEX"
-NrContract: "153"
-DataContract: "2021-11-01"
-Valoare: "250"
-
-Note: ""
-
-NrAutorizatie: null
-DataAutorizatie: null
-DataExpirareAutorizatie: null
--->
-
 
             </div>
         </div>
@@ -213,6 +191,7 @@ DataExpirareAutorizatie: null
                         :enableTimePicker="false"
                         :dark="isDark"
                         format="yyyy-MM-dd"
+                        inputClassName="placeholder:italic placeholder:text-slate-400 placeholder:text-xs"
                         placeholder="Data contract"
                         autoApply
                         ></Datepicker>
@@ -324,7 +303,7 @@ const props = defineProps({
     client: Object,
     anaf: Object,
     furnizori: Object,
-    errors: '',
+    errors: String,
     editMode: Boolean
 })
 

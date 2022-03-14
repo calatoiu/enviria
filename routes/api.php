@@ -27,8 +27,12 @@ Route::apiResource('clients', ClientController::class);
 
 
 Route::get('/clienti/{CIF}', [ClientController::class, 'showw']);
+Route::get('/newclientfromanaf/{CIF}', [ClientController::class, 'newclientfromanaf']);
 Route::get('/anaf/{CIF}', [ClientController::class, 'anaf']);
 Route::put('/clienti/{CIF}', [ClientController::class, 'updatecif']);
+Route::put('/addclient', [ClientController::class, 'store']);
+
+
 
 Route::get('/facturi/{CUI}', [FacturaController::class, 'indexcui']);
 Route::get('/facturahtml/{SerieNumar}', [FacturaController::class, 'facturahtml']);

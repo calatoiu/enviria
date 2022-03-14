@@ -1,5 +1,5 @@
 <template>
-<div @click.self="closeModal" class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+<div @click.self="closeModal"   class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
     <div class="fixed inset-0 transition-opacity">
         <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
     </div>
@@ -7,18 +7,42 @@
     <!-- <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span> -->
     <span class="hidden sm:inline-block sm:align-top sm:h-screen"></span>
     ​
-    <div class="inline-block overflow-hidden text-left align-top transition-all transform bg-white dark:bg-dark-eval-1 rounded-lg shadow-xl sm:my-8 sm:align-top sm:max-w-[70%] sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-        <div class="flex flex-row flex-wrap items-end justify-between text-sm font-normal text-gray-500 justify-items-start dark:text-gray-300">
-            <div class="flex-auto px-4 pt-4 ">
-                <span class="font-bold"> {{props.client.Denumire}} ({{props.client.CIF}} - {{props.client.NrRegCom}}) </span> - {{props.client.Sediu}} - {{props.client.Judet}}
+    <div @keydown.esc="closeModal" tabindex="0" class="inline-block overflow-hidden text-left align-top transition-all transform bg-white dark:bg-dark-eval-1 rounded-lg shadow-xl sm:my-8 sm:align-top sm:max-w-[70%] sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+        <div @keydown.esc="closeModal" tabindex="0" class="flex flex-row flex-wrap items-end justify-start text-sm font-normal text-gray-500 justify-items-start dark:text-gray-300">
+            <div class="flex-auto p-2" v-if='props.message'>
+                <span class="font-bold text-red-600"> {{props.message}} </span>
             </div>
-            <div class="flex-auto px-4 pt-2">
-                {{props.client.ContBancar}} - {{props.client.Banca}}
+            <div class="p-1 m-1 font-bold border rounded">
+                {{props.client.Denumire}}
             </div>
-            <div class="flex-auto px-4 pt-2">
-                Contract {{props.client.Furnizor}}: {{props.client.NrContract}} / {{props.client.DataContract}} - {{props.client.Valoare}} lei
+            <div class="p-1 m-1 font-bold border rounded">
+                {{props.client.CIF}}
             </div>
-            <div class="flex-auto px-4 pt-2 ">
+            <div v-if='props.client.NrRegCom' class="p-1 m-1 border rounded">
+                {{props.client.NrRegCom}}
+            </div>
+            <div v-if='props.client.Sediu' class="p-1 m-1 border rounded">
+                {{props.client.Sediu}}
+            </div>
+            <div class="p-1 m-1 border rounded">
+                {{props.client.Judet}}
+            </div>
+            <div v-if='props.client.ContBancar' class="p-1 m-1 border rounded">
+                {{props.client.ContBancar}}
+            </div>
+            <div v-if='props.client.Banca' class="p-1 m-1 border rounded">
+                {{props.client.Banca}}
+            </div>
+            <div v-if='props.client.FurnizorDen' class="p-1 m-1 border rounded">
+                {{  props.client.FurnizorDen}}
+            </div>
+            <div v-if='props.client.NrContract' class="p-1 m-1 border rounded">
+                Contract: {{props.client.NrContract}}/{{props.client.DataContract}}
+            </div>
+            <div v-if='props.client.Valoare && props.client.Valoare != 0' class="p-1 m-1 border rounded">
+                {{props.client.Valoare}} lei
+            </div>
+            <div v-if='props.client.Note' class="p-1 m-1 border rounded">
                 {{props.client.Note}}
             </div>
         </div>
@@ -32,13 +56,17 @@
                         <div v-else> &nbsp; </div>
                     </div>
                     <div class="w-20 px-1 text-right">
-                        <div v-if="factura.Sold" class="text-red-700"> {{factura.Sold}}lei </div>
+                        <div v-if="factura.Sold != 0" class="text-red-700"> {{factura.Sold}}lei </div>
                         <div v-else> &nbsp; </div>
                     </div>
                     <div class="px-1 w-36">{{factura.Interval}}</div>
                 </div>
             </div>
         </div>
+
+<!-- <div class="w-full h-6 bg-gray-200 rounded-full dark:bg-gray-700">
+  <div class="h-6 bg-gray-600 rounded-full dark:bg-gray-300" style="width: 80%"></div>
+</div> -->
         <div class="flex px-2  py-3 bg-gray-50 dark:bg-dark-eval-1 gap-y-3.5 items-center justify-between">
             <Button variant="primary" type="button" class="justify-center w-36" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="adaugaFactura">
                     <PencilIcon aria-hidden="true" :class="iconSizeClasses" />
@@ -80,6 +108,7 @@ const props = defineProps({
     client: Object,
     editMode: Boolean,
     facturi: Object,
+    message: String,
 })
 
 const isProcessing = ref(false)
@@ -91,7 +120,14 @@ const closeModal = () => {
 }
 
 onMounted(()=>{
-    console.log('ClientView on Mounted facturi', props.facturi)
+    console.log('ClientView on Mounted message',  props.message)
+        // Close modal with 'esc' key
+    document.addEventListener("keydown", (e) => {
+        if (e.keyCode == 27) {
+ //           this.$emit('close');
+            emit('close')
+        }
+    });
 })
 
 const edit = async () => {

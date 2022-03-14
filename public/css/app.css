@@ -784,6 +784,9 @@ select {
 .m-0 {
   margin: 0px;
 }
+.m-1 {
+  margin: 0.25rem;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -864,6 +867,9 @@ select {
 }
 .ml-5 {
   margin-left: 1.25rem;
+}
+.mb-1 {
+  margin-bottom: 0.25rem;
 }
 .block {
   display: block;
@@ -1124,6 +1130,9 @@ select {
 .items-center {
   align-items: center;
 }
+.justify-start {
+  justify-content: flex-start;
+}
 .justify-end {
   justify-content: flex-end;
 }
@@ -1334,6 +1343,14 @@ select {
 .bg-green-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+}
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+.bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 .fill-current {
   fill: currentColor;
@@ -1766,6 +1783,39 @@ select {
 .dark .ps__rail-x {
     background-color: transparent !important;
 }
+.placeholder\:text-xs::-moz-placeholder {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.placeholder\:text-xs:-ms-input-placeholder {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.placeholder\:text-xs::placeholder {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.placeholder\:italic::-moz-placeholder {
+  font-style: italic;
+}
+.placeholder\:italic:-ms-input-placeholder {
+  font-style: italic;
+}
+.placeholder\:italic::placeholder {
+  font-style: italic;
+}
+.placeholder\:text-slate-400::-moz-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+}
+.placeholder\:text-slate-400:-ms-input-placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+}
+.placeholder\:text-slate-400::placeholder {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+}
 .before\:absolute::before {
   content: var(--tw-content);
   position: absolute;
@@ -2095,6 +2145,14 @@ select {
 .dark .dark\:bg-dark-bg {
   --tw-bg-opacity: 1;
   background-color: rgb(21 24 35 / var(--tw-bg-opacity));
+}
+.dark .dark\:bg-gray-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+.dark .dark\:bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 .dark .dark\:text-gray-500 {
   --tw-text-opacity: 1;

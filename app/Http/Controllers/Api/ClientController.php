@@ -6,6 +6,7 @@ use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Mpdf\Tag\Tr;
 
 class ClientController extends Controller
 {
@@ -25,47 +26,96 @@ class ClientController extends Controller
 	public function showw($CIF)
 	{
         $client = Client::whereCif($CIF)->first();
-//         echo ('<PRE>');
-//         print_r($client);
-//         print_r(new ClientResource($client));
-// die();
-
-//return '{"data":{"CIF":18993268,"Denumire":"AGRO C.H.P. PROD SRL","ContBancar":"RO85INGB0000999905016706","Banca":"ING BANK CONSTANTA ","Sediu":"Str. Salcamului nr. 1, loc. Vadu, com. Corbu","Judet":"Constanta","NrRegCom":"J13\/2714\/2006","RO":"RO","NrContract":"23","DataContract":"2019-09-26","Valoare":"250","NrAutorizatie":71,"DataAutorizatie":"2016-05-23","DataExpirareAutorizatie":"2021-05-23","Furnizor":"KEE","Note":""}}';
-//        $client->Judet = "Constanța";
 		return new ClientResource($client);
 	}
 
     public function anaf($cif)
     {
         $anaf = new \Itrack\Anaf\Client();
-
+    //    $cif = $cif . '1';
         $anaf->addCif($cif, Carbon::now()->toDateString());
 
          $company = cache()->remember('client-' . $cif, 3600, function () use ($anaf, $cif) {
             Log::debug('get cif from db - ' . $cif);
-             return $anaf->first();
-         });
+            try {
+                return $anaf->first();
+            } catch (\Throwable $th) {
+                return null;
+            }
 
+         });
+//dd($company);
         // $company = cache([$cif => $anaf->first()], now()->addMinutes(10));
        // $company = $anaf->first();
-
-        $adresas = explode(',', $company->getFullAddress());
-        $judet = explode(' ',$adresas[0])[1];
-        array_shift($adresas);
-        $adresa = implode($adresas);
-
-        $result = [
-            "Denumire" =>  $company->getName(),
-            "CIF" =>  $company->getCIF(),
-            "NrRegCom" => $company->getRegCom(),
-            "Phone" => $company->getPhone(),
-            "Sediu" => $adresa,
-            "Judet" => $judet,
-            "RO" => $company->getTVA()->hasTVA() ? "RO" : "",
-      //      'Activ' => $company->isActive(),
-        ];
-        //return ["Denumire" => $company->getFullAddress(),];
+        if($company) {
+            $fullAddress = $company->getFullAddress();
+            $judet = "";
+            $adresa= "";
+            if ($fullAddress != "") {
+                    $adresas = explode(',', $fullAddress);
+                    $judet = explode(' ',$adresas[0])[1];
+                    array_shift($adresas);
+                    $adresa = implode($adresas);
+            }
+            $result = [
+                "Denumire" =>  $company->getName(),
+                "CIF" =>  $company->getCIF(),
+                "NrRegCom" => $company->getRegCom(),
+                "Phone" => $company->getPhone(),
+                "Sediu" => trim($adresa),
+                "Judet" => $judet,
+                "RO" => $company->getTVA()->hasTVA() ? "RO" : "",
+            ];
+        } else {
+            $result = [
+                "Denumire" =>  "",
+                "CIF" =>  "",
+                "NrRegCom" =>"",
+                "Phone" => "",
+                "Sediu" => "",
+                "Judet" => "",
+                "RO" => "",
+            ];
+        }
         return new ClientResource($result);
+    }
+
+
+    public function newclientfromanaf($cif)
+    {
+        $anaf = new \Itrack\Anaf\Client();
+        $anaf->addCif($cif .'1', Carbon::now()->toDateString());
+        $company = cache()->remember('client-' . $cif, 3600, function () use ($anaf, $cif) {
+            Log::debug('get cif from db - ' . $cif);
+            try {
+                return $anaf->first();
+            } catch (\Throwable $th) {
+                return null;
+            }
+        });
+
+        $client = new Client();
+        $client->CIF = $cif;
+        if ($company) {
+            $fullAddress = $company->getFullAddress();
+            $judet = "";
+            $adresa= "";
+            if ($fullAddress != "") {
+                    $adresas = explode(',', $fullAddress);
+                    $judet = explode(' ',$adresas[0])[1];
+                    array_shift($adresas);
+                    $adresa = implode($adresas);
+            }
+
+            $client->Denumire =  $company->getName();
+            $client->CIF =  $company->getCIF();
+            $client->NrRegCom = $company->getRegCom();
+            $client->Phone = $company->getPhone();
+            $client->Sediu = trim($adresa);
+            $client->Judet = $judet;
+            $client->RO = $company->getTVA()->hasTVA() ? "RO" : "";
+        }
+        return new ClientResource($client);
     }
 
 	public function update(ClientRequest $request, Client $client)
@@ -81,7 +131,8 @@ class ClientController extends Controller
 // die();
  //        echo('<PRE>');
 
-//        dd($company);
+      //  dd($request);
+  //      Log::debug('update client CIF - ' . $CIF);
         $client = Client::whereCif($CIF)->first();
         $rv = $request->validated();
 //        print_r($rv);
@@ -89,6 +140,8 @@ class ClientController extends Controller
 		$client->update($rv);
 		return new ClientResource($client);
 	}
+
+
 	public function destroy(Client $client)
 	{
 		$client->delete();
