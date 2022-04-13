@@ -16,145 +16,12 @@
             <h3 v-if="props.editMode" class="pb-4 text-center">Modificare client - {{props.client.CIF}} </h3>
             <h3 v-else class="pb-4 text-center">Adaugare client - {{props.client.CIF}} </h3>
             <div class="flex gap-y-3.5 justify-items-start flex-row flex-wrap items-end justify-between">
-                <!-- Denumire -->
-                <div class="flex-auto pr-4 basis-2/3">
-                    <div class="flex items-end pb-0.5">
-                        <Label class="flex-none" for="denumire" value="Denumire" />
-                        <div class="flex-initial pl-3" >
-                            <fieldset v-if="props.client.Denumire != props.anaf.Denumire" class="flex border border-gray-200 border-solid rounded dark:border-gray-600">
-                                <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
-                                    <div class="px-0.5 italic" > ANAF </div>
-                                </legend>
-                                <div class="px-2 text-xs font-normal text-gray-500 dark:text-gray-300"> {{props.anaf.Denumire}} </div>
-                                <Button
-                                    iconOnly variant="secondary" size="xs" type="button"
-                                    @click="copyDenumire"
-                                    v-slot="{ iconSizeClasses }" :disabled="props.client.Denumire == props.anaf.Denumire"
-                                    >
-                                    <ChevronDoubleDownIcon
-                                        aria-hidden="true"
-                                        :class="iconSizeClasses"
-                                    />
-                                </Button>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <InputVee withIcon name="denumire" id="denumire" type="text" class="block w-full" placeholder="Denumire"
-
-                        v-model="props.client.Denumire" :rules="validateDenumire"/>
-
-                    </InputIconWrapper>
-                    <ErrorMessage class="text-sm text-red-700" name="denumire" />
-                </div>  <!--  Denumire end -->
-
-                <!-- Judet -->
-                <div class="flex-auto pr-4 basis-1/3">
-                    <div class="flex items-end pb-0.5">
-                        <Label class="flex-none" for="judet" value="Județ" />
-                        <div class="flex-initial pl-3" >
-                            <fieldset v-if="props.client.Judet != props.anaf.Judet" class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
-                                <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
-                                    <div class="px-0.5 italic" > ANAF </div>
-                                </legend>
-                                <div class="px-2 text-xs font-normal text-gray-500 dark:text-gray-300"> {{props.anaf.Judet}} </div>
-                                <Button iconOnly variant="secondary" size="xs" type="button" @click="props.client.Judet = props.anaf.Judet" v-slot="{ iconSizeClasses }" :disabled="props.client.Judet == props.anaf.Judet">
-                                    <ChevronDoubleDownIcon aria-hidden="true" :class="iconSizeClasses" />
-                                </Button>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <InputVee withIcon name="judet" id="judet" type="text" class="block w-full" placeholder="Județ" v-model="props.client.Judet" :rules="validateJudet"/>
-                    </InputIconWrapper>
-                    <ErrorMessage class="text-sm text-red-700" name="judet" />
-                </div>  <!--  Judet end -->
-
-                <!-- Sediu -->
-                <div class="flex-auto pr-4 basis-2/3">
-                    <div class="flex items-end pb-0.5">
-                        <Label class="flex-none" for="sediu" value="Sediu" />
-                        <div class="flex-initial pl-3" >
-                            <fieldset v-if="props.client.Sediu != props.anaf.Sediu" class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
-                                <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
-                                    <div class="px-0.5 italic" > ANAF </div>
-                                </legend>
-                                <div class="px-2 text-xs font-normal text-gray-500 dark:text-gray-300"> {{props.anaf.Sediu}} </div>
-                                <Button iconOnly variant="secondary" size="xs" type="button" @click="props.client.Sediu = props.anaf.Sediu.trim()" v-slot="{ iconSizeClasses }" :disabled="props.client.Sediu == props.anaf.Sediu.trim()">
-                                    <ChevronDoubleDownIcon aria-hidden="true" :class="iconSizeClasses" />
-                                </Button>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <InputVee withIcon name="sediu" id="sediu" type="text" class="block w-full" placeholder="Sediu" v-model="props.client.Sediu" :rules="validateJudet"/>
-                    </InputIconWrapper>
-                    <ErrorMessage class="text-sm text-red-700" name="sediu" />
-                </div>  <!--  Sediu end -->
-
-
-                <!-- NrRegCom -->
-                <div class="flex-auto pr-4 basis-1/3">
-                    <div class="flex items-end pb-0.5">
-                        <Label class="flex-none" for="nrregcom" value="Reg com" />
-                        <div class="flex-initial pl-3" >
-                            <fieldset v-if="props.client.NrRegCom != props.anaf.NrRegCom" class="flex border border-gray-400 border-solid rounded dark:border-gray-600">
-                                <legend class="text-xs font-thin text-gray-700 dark:text-gray-300">
-                                    <div class="px-0.5 italic" > ANAF </div>
-                                </legend>
-                                <div class="px-2 text-xs font-normal text-gray-500 dark:text-gray-300"> {{props.anaf.NrRegCom}} </div>
-                                <Button iconOnly variant="secondary" size="xs" type="button" @click="props.client.NrRegCom = props.anaf.NrRegCom" v-slot="{ iconSizeClasses }"  :disabled="props.client.NrRegCom == props.anaf.NrRegCom">
-                                    <ChevronDoubleDownIcon aria-hidden="true" :class="iconSizeClasses" />
-                                </Button>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <InputVee withIcon name="nrregcom" id="nrregcom" type="text" class="block w-full" placeholder="Nr Reg Com" v-model="props.client.NrRegCom" :rules="validateJudet"/>
-                    </InputIconWrapper>
-                    <ErrorMessage class="text-sm text-red-700" name="nrregcom" />
-                </div>  <!--  NrRegCom end -->
-
-               <!-- Banca -->
-                <div class="flex-auto pr-4 basis-1/3">
-                    <div class="flex items-end pb-0.5">
-                        <Label class="flex-none" for="banca" value="Banca" />
-                    </div>
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <InputVee withIcon name="banca" id="banca" type="text" class="block w-full" placeholder="Banca" v-model="props.client.Banca" :rules="validateBanca"/>
-                    </InputIconWrapper>
-                    <ErrorMessage class="text-sm text-red-700" name="banca" />
-                </div>  <!--  Banca end -->
-
-               <!-- ContBancar -->
-                <div class="flex-auto pr-4 basis-2/3">
-                    <div class="flex items-end pb-0.5">
-                        <Label class="flex-none" for="contbancar" value="Cont bancar" />
-                    </div>
-                    <InputIconWrapper>
-                        <template #icon>
-                            <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                        </template>
-                        <InputVee withIcon name="contbancar" id="contbancar" type="text" class="block w-full" placeholder="Cont bancar" v-model="props.client.ContBancar" :rules="validateContBancar"/>
-                    </InputIconWrapper>
-                    <ErrorMessage class="text-sm text-red-700" name="contbancar" />
-                </div>  <!--  ContBancar end -->
-
+                <AnafField name="denumire" label="Denumire" v-model="props.client.Denumire" :avalue="props.anaf.Denumire" :rules="validateDenumire" :class="['basis-2/3']"/>
+                <AnafField name="judet" label="Județ" v-model="props.client.Judet" :avalue="props.anaf.Judet" :rules="validateJudet" :class="['basis-1/3']"/>
+                <AnafField name="sediu" label="Sediu" v-model="props.client.Sediu" :avalue="props.anaf.Sediu" :rules="validateJudet" :class="['basis-2/3']"/>
+                <AnafField name="nrregcom" label="Reg com" v-model="props.client.NrRegCom" :avalue="props.anaf.NrRegCom" :rules="validateJudet"  :class="['basis-1/3']"/>
+                <ClientField name="banca" label="Banca" v-model="props.client.Banca" :rules="validateBanca"  :class="['basis-1/3']"/>
+                <ClientField name="contbancar" label="Cont bancar" v-model="props.client.ContBancar" :rules="validateContBancar"  :class="['basis-2/3']"/>
             </div>
         </div>
        <div class="px-4 pt-5 pb-4 bg-white dark:bg-dark-eval-1 sm:p-6 sm:pb-4">
@@ -278,6 +145,9 @@ import Select from '@/Components/Select'
 import Textarea from '@/Components/Textarea'
 import InputVee from '@/Components/InputVee'
 import Label from '@/Components/Label'
+import AnafField from './AnafField'
+import ClientField from './ClientField'
+import ViewField from './ViewField'
 import InputIconWrapper from '@/Components/InputIconWrapper'
 import { DocumentTextIcon, SelectorIcon, PlusIcon, PlusCircleIcon, SearchIcon, PencilAltIcon, SaveIcon, XIcon, ChevronDoubleDownIcon, CurrencyDollarIcon} from '@heroicons/vue/outline'
 import { isValidIBAN } from "ibantools"
@@ -327,6 +197,21 @@ const update = () => {
 
 
 const validateDenumire = (value) => {
+       console.log('validateDenumire ',value)
+      // if the field is empty
+      if (!value) {
+        return 'This field is required';
+      }
+      // if the field is not a valid email
+    //   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    //   if (!regex.test(value)) {
+    //     return 'This field must be a valid email';
+    //   }
+      // All is good
+      return true;
+}
+const validateDenumire1 = (value) => {
+    console.log('validateDenumire1 ',value)
       // if the field is empty
       if (!value) {
         return 'This field is required';

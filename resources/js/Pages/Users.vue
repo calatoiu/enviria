@@ -5,11 +5,6 @@
                 <h2 class="text-xl font-semibold leading-tight">
                     Users
                 </h2>
-
-                <Button external variant="black" target="_blank" class="items-center max-w-xs gap-2" v-slot="{ iconSizeClasses }" href="https://github.com/kamona-wd/kui-laravel-breeze">
-                    <GithubIcon aria-hidden="true" :class="iconSizeClasses" />
-                    <span>Star on Github</span>
-                </Button>
             </div>
         </template>
 

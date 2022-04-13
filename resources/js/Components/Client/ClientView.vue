@@ -12,39 +12,18 @@
             <div class="flex-auto p-2" v-if='props.message'>
                 <span class="font-bold text-red-600"> {{props.message}} </span>
             </div>
-            <div class="p-1 m-1 font-bold border rounded">
-                {{props.client.Denumire}}
-            </div>
-            <div class="p-1 m-1 font-bold border rounded">
-                {{props.client.CIF}}
-            </div>
-            <div v-if='props.client.NrRegCom' class="p-1 m-1 border rounded">
-                {{props.client.NrRegCom}}
-            </div>
-            <div v-if='props.client.Sediu' class="p-1 m-1 border rounded">
-                {{props.client.Sediu}}
-            </div>
-            <div class="p-1 m-1 border rounded">
-                {{props.client.Judet}}
-            </div>
-            <div v-if='props.client.ContBancar' class="p-1 m-1 border rounded">
-                {{props.client.ContBancar}}
-            </div>
-            <div v-if='props.client.Banca' class="p-1 m-1 border rounded">
-                {{props.client.Banca}}
-            </div>
-            <div v-if='props.client.FurnizorDen' class="p-1 m-1 border rounded">
-                {{  props.client.FurnizorDen}}
-            </div>
-            <div v-if='props.client.NrContract' class="p-1 m-1 border rounded">
-                Contract: {{props.client.NrContract}}/{{props.client.DataContract}}
-            </div>
-            <div v-if='props.client.Valoare && props.client.Valoare != 0' class="p-1 m-1 border rounded">
-                {{props.client.Valoare}} lei
-            </div>
-            <div v-if='props.client.Note' class="p-1 m-1 border rounded">
-                {{props.client.Note}}
-            </div>
+            <ViewField :fvalue='props.client.Denumire' :class="['font-bold']" />
+            <ViewField :fvalue='props.client.CIF' :class="['font-bold']" />
+            <ViewField :fvalue='props.client.NrRegCom'/>
+            <ViewField :fvalue='props.client.Sediu'/>
+            <ViewField :fvalue='props.client.Judet'/>
+            <ViewField :fvalue='props.client.ContBancar'/>
+            <ViewField :fvalue='props.client.Banca'/>
+            <ViewField :fvalue='props.client.FurnizorDen'/>
+            <ViewField :fvalue='props.client.NrContract'/>
+            <ViewField :fvalue='props.client.DataContract'/>
+            <ViewField :fvalue='props.client.Valoare'/>
+            <ViewField :fvalue='props.client.Note'/>
         </div>
         <div class="overflow-auto shadow-lg h-[500px]">
             <div class="w-full p-1 text-xs">
@@ -89,7 +68,7 @@
 
 import Button from '@/Components/Button'
 import {  PencilIcon, XIcon} from '@heroicons/vue/outline'
-
+import ViewField from './ViewField'
 import { defineProps, defineEmits, ref, computed,
 //reactive,
 onMounted,

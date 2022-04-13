@@ -10,10 +10,10 @@ use Mpdf\Tag\Tr;
 
 class ClientController extends Controller
 {
-	public function index()
-	{
-		return ClientResource::collection(Client::all());
-	}
+	// public function index()
+	// {
+	// 	return ClientResource::collection(Client::all());
+	// }
 	public function store(ClientRequest $request)
 	{
 		$client = Client::create($request->validated());
@@ -31,6 +31,10 @@ class ClientController extends Controller
 
     public function anaf($cif)
     {
+     // $this->middleware('web');
+    //  $session = app('session');
+     //   $token = csrf_token();
+      //  dd($token);
         $anaf = new \Itrack\Anaf\Client();
     //    $cif = $cif . '1';
         $anaf->addCif($cif, Carbon::now()->toDateString());

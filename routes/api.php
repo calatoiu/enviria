@@ -22,13 +22,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::apiResource('clients', ClientController::class);
+//Route::apiResource('clientss', ClientController::class)->middleware('auth');
 //Route::apiResource('facturas', FacturaController::class);
 
 
 Route::get('/clienti/{CIF}', [ClientController::class, 'showw']);
 Route::get('/newclientfromanaf/{CIF}', [ClientController::class, 'newclientfromanaf']);
-Route::get('/anaf/{CIF}', [ClientController::class, 'anaf']);
+Route::get('/anaf/{CIF}', [ClientController::class, 'anaf'])->middleware('web');
 Route::put('/clienti/{CIF}', [ClientController::class, 'updatecif']);
 Route::put('/addclient', [ClientController::class, 'store']);
 
