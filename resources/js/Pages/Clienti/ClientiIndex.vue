@@ -1,6 +1,6 @@
 <template>
     <AuthenticatedLayout title="Clienți">
-        <div class="p-2 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
+        <div class="flex flex-col w-full h-screen p-2 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
             <div class="flex items-center justify-between px-3 pb-2">
                 <div class="flex-1 w-auto pr-4">
                     <InputIconWrapper>
@@ -27,23 +27,27 @@
                     </Button>
                 </div>
             </div>
-            <div class="max-h-[400px] overflow-auto">
-                <table class="w-full table-fixed">
-                    <tbody>
-                        <tr v-for="client in clientiFiltrati" :key="client.CIF">
-                            <td class="px-4 py-2 border">
-                                <Button
-                                    variant="secondary"
-                                    type="button"
-                                    :disabled="isProcessing"
-                                    @click="viewClient(client)"
-                                    class="text-left"                            >
-                                    {{ client.Denumire }}
-                                </Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="h-screen">
+                <div class="overflow-auto h-[calc(100%_-_9rem)]">
+                    <table class="w-full table-fixed">
+                        <tbody>
+                            <tr v-for="client in clientiFiltrati" :key="client.CIF">
+                                <td class="px-4 py-1 ">
+                                    <Button
+                                        variant="secondary"
+                                        type="button"
+                                        :disabled="isProcessing"
+                                        @click="viewClient(client)"
+                                        class="text-left"                            >
+                                        {{ client.Denumire }}
+                                    </Button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="h-[9rem]">
+                </div>
             </div>
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenCUIForm">
                 <CUIForm  @close="closeCUIForm" @add="adaugaClient"/>
@@ -52,7 +56,11 @@
                 <ClientForm :client="currentEditClient" :furnizori="furnizori" :anaf="currentAnaf" :editMode="editMode" :errors="errors" @close="closeClientForm" @save="saveClient"/>
             </div>
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenClientView">
-                <ClientView :message="viewFormMsg" :client="currentClient" :facturi="currentFacturi" @close="closeClientView" @edit="editClient()"  @adaugafactura="adaugaFactura" @viewfactura="viewFactura" />
+                <ClientView :message="viewFormMsg" :client="currentClient" :facturi="currentFacturi" :punctelucru="currentPunctelucru" @close="closeClientView" @edit="editClient()"
+                @adaugafactura="adaugaFactura" @viewfactura="viewFactura"
+                @adaugapunctlucru="adaugaPunctLucru" @viewpunctlucru="viewPunctLucru"
+                @confirmaresold="confirmareSold"
+                />
             </div>
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenFacturaView">
                 <FacturaView :facturahtml="currentFacturaHTML" :SerieNumar = "currentSerieNumar" @edit="editFactura(currentSerieNumar)"   @close="closeFacturaView"  />
@@ -117,6 +125,7 @@ const currentAnaf = ref({})
 const cClient = ref({})
 const isOpenClientView = ref(false)
 const currentFacturi = ref({})
+const currentPunctelucru = ref({})
 const furnizori = ref({})
 const viewFormMsg = ref('')
 
@@ -128,6 +137,7 @@ const viewClient = async (client, msg = '')=>{
     if (furnizor)
         currentClient.value.FurnizorDen = furnizor.Denumire
     currentFacturi.value =  await getFacturi(client.CIF)
+    currentPunctelucru.value =  await getPunctelucru(client.CIF)
     viewFormMsg.value = msg
     isOpenClientView.value = true
     isProcessing.value = false
@@ -142,7 +152,7 @@ const isOpenClientForm = ref(false)
 
 const editClient = async ()=>{
     isProcessing.value = true
-    console.log('editClient:cClient ' + cClient.value.Denumire)
+  //  console.log('editClient:cClient ' + cClient.value.Denumire)
     currentAnaf.value =  await getAnaf(cClient.value.CIF)
     currentEditClient.value = await getClient(cClient.value.CIF)
     editMode.value = true;
@@ -280,12 +290,38 @@ const getFacturi = async (CUI) => {
     return response.data.data
 }
 
+const getPunctelucru = async (CUI) => {
+    let response = await axios.get('/api/punctelucru/' + CUI)
+    return response.data.data
+}
+
 const getFurnizori = async () => {
     let response = await axios.get('/api/furnizori')
     return response.data.data
 }
 
+const confirmareSold = async () => {
+        isProcessing.value = true
 
+        var d = new Date(),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        console.log('ClientView props',  props)
+        axios({
+        url: '/api/clienti/confirmaresold/' + cClient.value.CIF + '/' + [year, month, day].join('-'),
+        method: 'GET',
+        responseType: 'blob', // important
+    }).then((response) => {
+        let filename = response.headers['content-disposition'].split(';')[1].split('=')[1].replaceAll('"','')
+        console.log(filename)
+        saveAs(response.data, filename);
+    });
+    isProcessing.value = false
+}
 
 // const getFurnizori = () => {
 //     axios.get('/api/furnizori').then((response) => {
@@ -369,4 +405,15 @@ const closeFacturaForm = async ()=>{
 //===End Factura
 
 
+//====Punct Lucru =======
+
+const adaugaPunctLucru = async ()=>{
+    console.log('==Adauga punct lucru==')
+}
+
+const viewPunctLucru = async ()=>{
+    console.log('==Deschide punct lucru==')
+}
+
+//===End Punct Lucru
 </script>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\FacturaController;
 use App\Http\Controllers\Api\FurnizorController;
+use App\Http\Controllers\Api\PunctlucruController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,12 +27,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::apiResource('facturas', FacturaController::class);
 
 
-Route::get('/clienti/{CIF}', [ClientController::class, 'showw']);
+Route::get('/clienti/{CIF}', [ClientController::class, 'showw'])->middleware('web');
 Route::get('/newclientfromanaf/{CIF}', [ClientController::class, 'newclientfromanaf']);
 Route::get('/anaf/{CIF}', [ClientController::class, 'anaf'])->middleware('web');
 Route::put('/clienti/{CIF}', [ClientController::class, 'updatecif']);
 Route::put('/addclient', [ClientController::class, 'store']);
-
+Route::get('/clienti/confirmaresold/{CIF}/{Data}', [ClientController::class, 'confirmaresold']);
 
 
 Route::get('/facturi/{CUI}', [FacturaController::class, 'indexcui']);
@@ -45,3 +46,5 @@ Route::get('/furnizori', [FurnizorController::class, 'index']);
 
 // test!!!!
 Route::get('/facturahtmlraw', [FacturaController::class, 'facturahtmlraw']);
+
+Route::get('/punctelucru/{CUI}', [PunctlucruController::class, 'indexcui']);

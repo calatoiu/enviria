@@ -43,6 +43,11 @@ class Factura extends Model
         return RODate::getIntervalLuni($this->LunaIni, $this->LunaFin);
     }
 
+    public function getIntervalTextAttribute()
+    {
+        return RODate::getTextLuni($this->LunaIni, $this->LunaFin);
+    }
+
     public function decontari()
     {
         return $this->hasMany(Decontare::class, 'SerieNumarFactura', 'SerieNumar');
@@ -50,18 +55,18 @@ class Factura extends Model
 
     public function getSoldAttribute()
     {
-        return 0;
         $decontari = $this->decontari();
         $nrdec = $decontari->get()->count();
         $docSelect = $decontari->selectRaw('decontare.SerieNumarFactura, ifnull(SUM(decontare.Suma),0) as decontat')
                                 ->groupBy('decontare.SerieNumarFactura');
-     //   dd($decSelect);
+ //       dd($docSelect);
      //   DB::enableQueryLog();
         $sumdec = $docSelect->first();
       //  dd(DB::getQueryLog(), $sumdec, $nrdec);
      //   dd($sumdec);
 
         $decontat =  $sumdec ?  $sumdec->decontat : 0;
+      //  return $decontat;
         return $this->Valoare - $decontat;
 
         // $decontat =  $this->decontari() ?

@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 
 import Button from '@/Components/Button'
 import Label from '@/Components/Label'
@@ -54,6 +54,7 @@ import InputIconWrapper from '@/Components/InputIconWrapper'
 import { PencilAltIcon,  ChevronDoubleDownIcon} from '@heroicons/vue/outline'
 import { Field, ErrorMessage } from 'vee-validate';
 
+const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
     avalue: {String, Number},
     modelValue: {String, Number},

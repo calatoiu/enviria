@@ -23,30 +23,42 @@
                 <span class="text-xs">Modifică client</span>
             </Button>
         </div>
-        <ul v-if="currentTab == 'facturitab'" class="flex flex-wrap border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap border-b border-gray-200 dark:border-gray-700">
             <li class="mr-2">
-                <a aria-current="page" class="inline-block px-4 py-4 text-sm font-medium text-center text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500">Facturi</a>
+                <a href="#" aria-current="page" class="inline-block px-4 py-4 text-sm font-medium text-center text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500">Facturi</a>
             </li>
             <li class="mr-2">
-                <a  @click="doClickPuncteLucru" class="inline-block px-4 py-4 text-sm font-medium text-center text-gray-500 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300">Puncte de lucru</a>
-            </li>
-        </ul>
-        <ul v-if="currentTab == 'punctelucrutab'" class="flex flex-wrap border-b border-gray-200 dark:border-gray-700">
-            <li class="mr-2">
-                <a @click="doClickFacturi" class="inline-block px-4 py-4 text-sm font-medium text-center text-gray-500 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300" >Facturi</a>
-            </li>
-            <li class="mr-2">
-                <a  aria-current="page" class="inline-block px-4 py-4 text-sm font-medium text-center text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500">Puncte de lucru</a>
+                <a href="#"                     class="inline-block px-4 py-4 text-sm font-medium text-center text-gray-500 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-300">Puncte de lucru</a>
             </li>
         </ul>
         <div class="flex flex-initial rounded px-2  py-1 bg-gray-50 dark:bg-dark-eval-2 gap-y-3.5 items-center justify-between">
+            <Button variant="primary" type="button" class="justify-center w-36" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="adaugaFactura" size="sm">
+                    <PlusIcon aria-hidden="true" :class="iconSizeClasses" />
+                    <span class="text-xs">Adaugă factură</span>
+            </Button>
+
             <Button variant="secondary" type="button" class="fixed top-0 right-0" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="closeModal" size="sm">
                 <XIcon aria-hidden="true" :class="iconSizeClasses" />
                 <span class="text-xs"></span>
             </Button>
         </div>
-        <ClientFacturiView v-if="currentTab == 'facturitab'" :facturi="facturi" @adaugafactura="adaugaFactura" @viewfactura="viewFactura" @confirmaresold="confirmareSold"/>
-        <ClientPunctelucruView v-if="currentTab == 'punctelucrutab'" :punctelucru="punctelucru" @adaugapunctlucru="adaugaPunctLucru" @viewpunctlucru="viewPunctLucru"/>
+        <div class="flex-auto overflow-auto shadow-lg h-5/6">
+            <div class="w-full text-xs">
+                <div class="flex w-full py-3 my-2 rounded shadow-md cursor-pointer hover:shadow-xl hover:bg-gray-200 dark:hover:bg-gray-600" v-for="factura in props.facturi" :key="factura.CUI" @click="viewFactura(factura.SerieNumar)">
+                    <div class="w-[90px] px-1">{{factura.SerieNumar}}</div>
+                    <div class="w-[85px] px-1">{{factura.Data}}</div>
+                    <div class="w-20 px-1 text-right">
+                        <div v-if="factura.Valoare"> {{factura.Valoare}}lei </div>
+                        <div v-else> &nbsp; </div>
+                    </div>
+                    <div class="w-20 px-1 text-right">
+                        <div v-if="factura.Sold != 0" class="text-red-700"> {{factura.Sold}}lei </div>
+                        <div v-else> &nbsp; </div>
+                    </div>
+                    <div class="px-1 w-36">{{factura.Interval}}</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -54,9 +66,6 @@
 <script setup>
 
 import Button from '@/Components/Button'
-import ClientFacturiView from './ClientFacturiView'
-import ClientPunctelucruView from './ClientPunctelucruView'
-
 import {  PencilIcon, XIcon, PlusIcon} from '@heroicons/vue/outline'
 import ViewField from './ViewField'
 import { defineProps, defineEmits, ref, computed,
@@ -77,14 +86,12 @@ const props = defineProps({
     client: Object,
     editMode: Boolean,
     facturi: Object,
-    punctelucru: Object,
     message: String,
 })
 
 const isProcessing = ref(false)
 
-
-const emit = defineEmits(['close', 'edit', 'viewfactura', 'adaugafactura', 'viewpunctlucru', 'adaugapunctlucru', 'confirmaresold'])
+const emit = defineEmits(['close', 'edit', 'viewfactura', 'adaugafactura'])
 
 const closeModal = () => {
     emit('close')
@@ -126,41 +133,6 @@ const adaugaFactura = async () => {
     isProcessing.value = false
 
 }
-const viewPunctLucru = async (PunctLucruID) => {
-        isProcessing.value = true
-
-        emit('viewpunctlucru', PunctLucruID)
-
-    isProcessing.value = false
-
-}
-const adaugaPunctLucru = async () => {
-        isProcessing.value = true
-
-        emit('adaugapunctlucru')
-
-    isProcessing.value = false
-
-}
-
-const currentTab = ref('facturitab')
-
-const doClickFacturi = () =>
-{
-    if (currentTab.value != 'facturitab')
-        currentTab.value = 'facturitab'
-}
-
-const doClickPuncteLucru = () =>
-{
-    if (currentTab.value != 'punctelucrutab')
-        currentTab.value = 'punctelucrutab'
-}
 
 
-const confirmareSold = async () => {
-    isProcessing.value = true
-    emit('confirmaresold')
-    isProcessing.value = false
-}
 </script>

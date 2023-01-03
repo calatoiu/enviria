@@ -1,0 +1,129 @@
+
+<div >
+    <table border=0 cellspacing=0 cellpadding=0 width=667>
+        <tr style="font-size:12.0pt">
+            <td  width=264 style="font-size:12.0pt">
+                <b>Unitate creditoare</b>
+            </td>
+            <td width=100 style="font-size:12.0pt">
+                &nbsp;
+            </td>
+            <td align=left style="font-size:12.0pt">
+                <b>Către</b>
+            </td>
+        </tr>
+
+        <tr>
+            <td align=left>
+                <b>{furnizor nume}</b>
+            </td>
+            <td style="padding:0in 5.4pt 0in 10.15pt">
+                &nbsp;
+            </td>
+            <td align=left>
+                <b>{cumparator nume}</b>
+            </td>
+        </tr>
+        <tr>
+            <td align=left>
+                <b>C.I.F. {furnizor CUI}</b>&nbsp;&nbsp;R.C. {furnizor nr orc}
+            </td>
+            <td style="padding:0in 5.4pt 0in 10.15pt">
+                &nbsp;
+            </td>
+            <td align=left>
+                <b>C.I.F. {cumparator CUI}</b>&nbsp;&nbsp;R.C. {cumparator nr orc}
+            </td>
+        </tr>
+
+
+        <tr>
+            <td align=left>
+                Adresa &nbsp;&nbsp; {furnizor sediul}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                Județ&nbsp;&nbsp;{furnizor judetul}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <b>Banca&nbsp;&nbsp; {furnizor banca}</b>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <b>IBAN &nbsp;&nbsp; {furnizor contul}</b>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <u><b>Confirmare sold</b></u>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                Vă înștiințăm că, în evidențele noastre contabile, la data de {data sold}, unitatea dvs. figurează cu următoarele facturi neachitate în sumă de {sold total} lei.
+            </td>
+        </tr>
+    </table>
+
+    <p>&nbsp;</p>
+
+    <table border=1 cellspacing=0 cellpadding=0 width=628 style="font-size:14.0pt">
+        <tr>
+            <td align="center">
+                <b>Documentul (felul, numărul și data)</b>
+            </td>
+            <td align="center">
+                <b>Explicații</b>
+            </td>
+            <td align="center">
+                <b>Suma (lei)</b>
+            </td>
+        </tr>
+{facturi}
+        <tr style="font-size:16.0pt">
+            <td align=right style="font-size:16.0pt" colspan="2">
+                Total
+            </td>
+            <td align=right style="font-size:16.0pt">
+                <b>{sold total}</b>
+            </td>
+        </tr>
+    </table>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <table border=0 cellspacing=0 cellpadding=0 width=628 >
+        <tr>
+            <td width="200">
+                Conducătorul untății,
+            </td>
+            <td width="100" >
+                &nbsp;
+            </td>
+            <td align="center">
+                Conducatorul compartimentului,
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                &nbsp;
+            </td>
+            <td align="center">
+                financiar-contabil,
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+

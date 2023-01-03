@@ -8,6 +8,7 @@
             {
                 'px-4': !withIcon,
                 'pl-11 pr-4': withIcon,
+                'pl-16 pr-4': withText,
             },
         ]"
         :value="modelValue"
@@ -22,6 +23,10 @@ import { ref } from 'vue'
 const props = defineProps({
     modelValue: String,
     withIcon: {
+        type: Boolean,
+        default: false,
+    },
+    withText: {
         type: Boolean,
         default: false,
     }

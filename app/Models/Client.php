@@ -49,6 +49,13 @@ class Client extends Model
             );
     }
 
+    public function punctelucru()
+    {
+        return $this->hasMany(Punctlucru::class, 'CIF', 'CIF')
+            ->orderBy('PunctLucruID', 'DESC')
+            ->select(['PunctLucruID', 'Denumire', 'NrAM', 'DataAM', 'DataRevAM', 'NotaAM']);
+    }
+
     public function facturineachitate()
     {
         return $this->hasMany(Factura::class, 'CUI', 'CIF')
@@ -56,7 +63,7 @@ class Client extends Model
                 (factura.Valoare - ifnull((select sum(decontare.Suma)
                 from decontare where decontare.SerieNumarFactura = factura.SerieNumar) , 0)) <> 0")
             ->orderBy('SerieNumar', 'ASC')
-            ->select(['SerieNumar', 'Data', 'Valoare', 'LunaIni', 'LunaFin'])
+            ->select(['SerieNumar', 'Data', 'Furnizor', 'Valoare', 'LunaIni', 'LunaFin'])
             ->addSelect([
                 DB::raw("
                     (factura.Valoare - ifnull(

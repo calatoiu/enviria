@@ -90,11 +90,6 @@ class RODate  {
         if (isset($lunaIni) && isset($lunaFin) && $lunaIni != '' && $lunaFin != '' ) {
             $anIni = substr($lunaIni, 0, 4);
             $anFin = substr($lunaFin, 0, 4);
-            $lIni = substr($lunaIni, 4, 2);
-            $lFin = substr($lunaFin, 4, 2);
-
-
-
 
             $date1 = DateTime::createFromFormat('Ymd', $lunaIni . '01');
             $date2 = DateTime::createFromFormat('Ymd', $lunaFin . '01');

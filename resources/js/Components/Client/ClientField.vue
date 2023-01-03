@@ -4,8 +4,11 @@
             <Label class="flex-none" :for="props.name" :value="props.label" />
         </div>
         <InputIconWrapper>
-            <template #icon>
+            <template v-if="!$slots.icon" #icon>
                 <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
+            </template>
+            <template v-else #icon>
+                 <slot name="icon" />
             </template>
             <Field
                 :name="props.name" :id="props.name" type="text" :placeholder="props.label" :rules="props.rules"

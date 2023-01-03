@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,6 +31,9 @@ class UserController extends Controller
         // echo( '<pre>');
         // print_r( $request);
         // die();
+        $header = $request->header();
+        Log::debug($header);
+
         $users = User::orderBy('id','DESC')->paginate(5);
         return Inertia::render('Users', ['users' => $users]);
         // return view('users.index',compact('data'))
@@ -84,6 +87,7 @@ class UserController extends Controller
         // echo( '<pre>');
         // print_r( $id);
         // die();
+
         $user = User::find($id);
         return view('users.show',compact('user'));
     }

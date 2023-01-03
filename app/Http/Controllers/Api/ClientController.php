@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
+use App\Models\Furnizor;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Mpdf\Tag\Tr;
@@ -16,6 +17,8 @@ class ClientController extends Controller
 	// }
 	public function store(ClientRequest $request)
 	{
+      //  Log::debug($request);
+      //  dd($request);
 		$client = Client::create($request->validated());
 		return new ClientResource($client);
 	}
@@ -23,8 +26,14 @@ class ClientController extends Controller
 	{
 		return new ClientResource($client);
 	}
-	public function showw($CIF)
+	//public function showw(ClientRequest $request, $CIF)
+	public function showw(\Illuminate\Http\Request $request, $CIF)
 	{
+     //   $header = $request->header();
+      //  Log::debug($header);
+      //  $request = $_GET;
+     //   dd($request);
+     //   $header = $request->header('Authorization');
         $client = Client::whereCif($CIF)->first();
 		return new ClientResource($client);
 	}
@@ -144,6 +153,138 @@ class ClientController extends Controller
 		$client->update($rv);
 		return new ClientResource($client);
 	}
+
+
+
+//====================
+// PDF
+//====================
+protected function html2pdf($html, $fileName)
+{
+    $mpdf = new \Mpdf\Mpdf([
+        'mode' => 'utf-8',
+        'format' => 'A4',           // format - A4, for example, default ''
+        'default_font_size' => 0,   // font size - default 0
+        'default_font' => '',       // default font family
+        'margin_left' => 20,    	// 15 margin_left
+        'margin_right' => 15,    	// 15 margin right
+        'margin_top' => 15,    	    // 15 margin right
+        'margin_bottom' => 25,    	// 15 margin right
+        'margin_header' => 10,      // 9 margin header
+        'margin_footer' => 10,      // 9 margin footer
+        'orientation' => 'P'  	    // L - landscape, P - portrait
+    ]);
+    $mpdf->allow_charset_conversion=false;  // Set by default to TRUE
+    $mpdf->SetProtection(['print','copy']);
+    $mpdf->SetTitle("Factura mediu");
+    $mpdf->SetAuthor("");
+    $mpdf->autoScriptToLang = true;
+    $mpdf->baseScript = 1;
+    $mpdf->autoLangToFont = true;
+    $mpdf->SetDisplayMode('fullpage');
+
+    $mpdf->WriteHTML($html);
+    $mpdf->Output($fileName,'D');
+}
+
+public function confirmaresold($CIF, $Data)
+{
+    $client = Client::find($CIF);
+    $html = $this->buildconfirmasoldhtml($client, $Data);
+
+    $denumire =  preg_replace("/[^a-z0-9\_\-\.]/i", '_',  $client->Denumire);
+    $fileName =
+        'Confirmare_sold-' . $Data . '-' . $denumire  . '.pdf';
+    $this->html2pdf($html, $fileName);
+}
+
+
+public function buildconfirmasoldhtml(Client $client, $data)
+{
+    $html = file_get_contents(__DIR__ . '/templates/ConfirmareSoldTemplate.html');
+    $htmlrow = file_get_contents(__DIR__ . '/templates/ConfirmareSoldRandTemplate.html');
+
+    $dataf = date("d-m-Y", strtotime($data));
+
+    $facturineachitate = $client->facturineachitate;
+    $htmlResult = '';
+    if ($facturineachitate->count() > 0)
+    {
+        $furnizori = Furnizor::all();
+
+        foreach($furnizori as $furnizor) {
+            $total = 0;
+            foreach($facturineachitate as $factura) {
+                if ($factura->Data <= $data && $factura->Furnizor == $furnizor->id ) {
+                    $total += $factura->Sold;
+                }
+            }
+
+            if ($total) {
+                if ($htmlResult != '')
+                {
+                    $htmlResult .= '<pagebreak>';
+
+                }
+                $htmlRowResult = '';
+                foreach($facturineachitate as $factura) {
+                    if ($factura->Data <= $data && $factura->Furnizor == $furnizor->id ) {
+                        $replaceRow =
+                        [
+                            '{numar factura}' => $factura->SerieNumar,
+                            '{data factura}' => date("d/m/Y", strtotime($factura->Data)),
+                            '{text servicii}' => '',
+                            '{sold factura}' => $factura->Sold,
+                        ];
+                        $htmlRowResult .= strtr($htmlrow, $replaceRow);
+                    }
+                }
+
+                $replace =
+                [
+                    '{furnizor nume}'    => $furnizor->Denumire,
+                    '{furnizor nr orc}'  => $furnizor->NrRegCom,
+                    '{furnizor CUI}'     => $furnizor->CUI,
+                    '{furnizor sediul}'  => $furnizor->Sediu,
+                    '{furnizor judetul}' => $furnizor->Judet,
+                    '{furnizor contul}'  => $furnizor->ContBancar,
+                    '{furnizor banca}'   => $furnizor->Banca,
+                    '{cumparator nume}'  => $client->Denumire,
+                    '{cumparator nr orc}' => $client->NrRegCom,
+                    '{cumparator CUI}'   =>  $client->CIF,
+                    '{data sold}'        => $dataf,
+                    '{sold total}'       => $total,
+                    '{facturi}' => $htmlRowResult,
+                ];
+                $htmlResult .= strtr($html, $replace);
+            }
+        }
+    }
+   //  echo( '<pre>');
+   //  print_r( $htmlResult );
+   //  die();
+   $htmlResult =
+   '<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Confirmare sold ' . $dataf . ' ' .  $client->Denumire . '</title>
+    </head>
+    <body lang=RO style="font-size:10.0pt;font-family:Calibri">' .
+    $htmlResult .
+    '</body></html>';
+
+    return $htmlResult;
+}
+
+//====================
+
+
+
+
+
+
+
+
 
 
 	public function destroy(Client $client)

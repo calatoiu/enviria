@@ -8,6 +8,7 @@
             {
                 'px-4': !withIcon,
                 'pl-11 pr-4': withIcon,
+                'pl-20 pr-4': withText,
             },
         ]"
         v-model="modelValue"
@@ -23,6 +24,10 @@ import { Field, Form, ErrorMessage } from 'vee-validate';
 const props = defineProps({
     modelValue: String,
     withIcon: {
+        type: Boolean,
+        default: false,
+    },
+    withText: {
         type: Boolean,
         default: false,
     }

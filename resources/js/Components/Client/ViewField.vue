@@ -1,6 +1,6 @@
 <template>
     <div v-if='props.fvalue' class="p-1 m-1 border rounded">
-        {{  props.fvalue}}
+        {{props.fvalue}}
     </div>
 </template>
 <script setup>

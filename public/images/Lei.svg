@@ -1,0 +1,15 @@
+<svg  xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    class="w-5 h-5"
+    stroke="currentColor"
+    stroke-width="8">
+    <g transform="translate(-2.000000,-2.000000) scale(0.1100000,0.1100000)" stroke-width="15 ">
+        <circle  cx="128" cy="128" r="81" fill="transparent" stroke-width="20"  />
+        <line x1="87.9" x2="87.9" y1="160" y2="96"/>
+        <line x1="168" x2="168" y1="104" y2="96"/>
+        <line x1="168" x2="168" y1="160" y2="112"/>
+        <circle cx="128" cy="136" r="20" fill="transparent"/>
+        <line x1="105" x2="151.7" y1="136" y2="136"/>
+        <polygon points="132 140 152 140 152 160" fill="white" stroke="none" />
+    </g>
+</svg>

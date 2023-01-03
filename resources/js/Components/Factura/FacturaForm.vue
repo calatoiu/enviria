@@ -13,10 +13,10 @@
     </div>
     <Form class="bg-white dark:bg-dark-eval-1">
         <div class="px-4 pt-5 pb-4 bg-white dark:bg-dark-eval-1 sm:p-6 sm:pb-4">
-            <h3 class="pb-4 text-center">Actualizare factura - {{props.factura.SerieNumar}} - {{props.client.Denumire}} </h3>
-            <div class="flex gap-y-3.5 justify-items-start flex-row flex-wrap items-end justify-between">
+            <h3 class="pb-4 text-center">Actualizare factură - {{props.factura.SerieNumar}} - {{props.client.Denumire}} </h3>
+            <div class="flex flex-wrap">
 <!-- Furnizor -->
-                    <div class="flex-auto pr-4 basis-1/2">
+                    <div class="pr-4">
                         <div class="flex items-end pb-0.5">
                             <Label class="flex-none" for="furnizor" value="Furnizor" />
                         </div>
@@ -32,7 +32,7 @@
                     </div>
 <!--  Furnizor end -->
 <!-- Data -->
-                    <div class="flex-auto pr-4 basis-1/3">
+                    <div class="pr-4">
                         <div class="flex items-end pb-0.5">
                             <Label class="flex-none" for="datafactura" value="Data" />
                         </div>
@@ -52,11 +52,13 @@
                         ></Datepicker>
                     </div>
 <!--  Data end -->
+<!--
                     <div>{{props.factura.Data}}</div>
                     <div>{{SerieFactura}}</div>
+                    <div>{{serieFactura}}</div>
+-->
 
-
-<!-- Serie Factura -->
+<!-- Serie Factura
                 <div class="flex-auto pr-4 basis-1/2">
                     <div class="flex items-end pb-0.5">
                         <Label class="flex-none" for="seriefactura" value="Serie" />
@@ -72,25 +74,26 @@
                     </InputIconWrapper>
                     <ErrorMessage class="text-sm text-red-700" name="note" />
                 </div>
-<!--  Serie Factura end -->
+  Serie Factura end -->
 <!-- Nr factura -->
-                    <div class="flex-auto pr-4 basis-1/3">
+                    <div class="pr-4">
                         <div class="flex items-end pb-0.5">
                             <Label class="flex-none" for="nrfactura" value="Număr" />
                         </div>
                         <InputIconWrapper>
                             <template #icon>
-                                <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
+                                {{SerieFactura}}
                             </template>
-                            <InputVee withIcon
+                            <InputVee withText
                                 name="nrfactura" id="nrfactura"
                                 type="text" class="block w-full" placeholder="Număr factura"
                                 v-model="numarFactura" :rules="validateNrFactura"/>
                         </InputIconWrapper>
                         <ErrorMessage class="text-sm text-red-700" name="nrfactura" />
-                    </div>  <!--  Nr factura end -->
+                    </div>
+<!--  Nr factura end -->
 <!-- Luna Ini -->
-                    <div class="flex-auto pr-4 basis-1/3">
+                    <div class="pr-4">
                         <div class="flex items-end pb-0.5">
                             <Label class="flex-none" for="lunaini" value="Luna inițială" />
                         </div>
@@ -104,7 +107,7 @@
                         :enableTimePicker="false"
                           monthPicker
                         :dark="isDark"
-                        format="MMMM yyyy"
+                        format="MMM yy"
                         placeholder="Luna început"
                         autoApply
                         ></Datepicker>
@@ -113,7 +116,7 @@
 
 
 <!-- Luna Fin -->
-                    <div class="flex-auto pr-4 basis-1/3">
+                    <div class="pr-4">
                         <div class="flex items-end pb-0.5">
                             <Label class="flex-none" for="lunafin" value="Luna finală" />
                         </div>
@@ -127,21 +130,45 @@
                         :enableTimePicker="false"
                           monthPicker
                         :dark="isDark"
-                        format="MMMM yyyy"
+                        format="MMM yy"
                         placeholder="Luna finală"
                         autoApply
                         ></Datepicker>
                     </div>
 <!--  Luna Fin end -->
-<!-- Interval -->
+
+<!-- Interval >
                     <div class="self-center flex-auto pr-4">
                         <p>{{IntervalLuni}} </p>
                     </div>
-<!--  Interval end -->
+<  Interval end -->
 
+<!-- Fara contract -->
+                    <label class="flex items-center pt-2 pr-4">
+                        <Checkbox name="FaraContract" v-model:checked="FaraContract" />
+                        <span class="ml-2 text-sm text-gray-600">Fără contract</span>
+                    </label>
+<!-- Fara contract end -->
+<!-- Nota text -->
+                    <label class="flex items-center pt-2 pr-4">
+                        <Checkbox name="NotaText" v-model:checked="NotaText" />
+                        <span class="ml-2 text-sm text-gray-600">Notă text</span>
+                    </label>
+<!-- Nota text end -->
+
+<!-- Nota -->
+
+                <InputLabelIconWrapper name="nota" label="Nota" :class="['']">
+                    <template #icon>
+                        <DocumentTextIcon aria-hidden="true" class="w-5 h-5" />
+                    </template>
+                    <InputVee as="textarea" withIcon name="nota" id="nota" class="block w-full" placeholder="Nota..." v-model="props.factura.Nota" />
+                </InputLabelIconWrapper>
+
+
+<!-- Nota end -->
             </div>
         </div>
-
         <div class="flex px-4 py-3 bg-gray-50 dark:bg-dark-eval-1 gap-y-3.5 flex-row flex-wrap items-end justify-between">
             <Button variant="primary" type="button" class="justify-center w-32 gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="save">
                     <SaveIcon aria-hidden="true" :class="iconSizeClasses" />
@@ -176,14 +203,16 @@ import Select from '@/Components/Select'
 import Textarea from '@/Components/Textarea'
 import InputVee from '@/Components/InputVee'
 import Label from '@/Components/Label'
+import Checkbox from '@/Components/Checkbox'
 import InputIconWrapper from '@/Components/InputIconWrapper'
+import InputLabelIconWrapper from '@/Components/InputLabelIconWrapper'
 import { DocumentTextIcon, SelectorIcon, PlusIcon, PlusCircleIcon, SearchIcon, PencilAltIcon, SaveIcon, XIcon, ChevronDoubleDownIcon, CurrencyDollarIcon} from '@heroicons/vue/outline'
 import { isValidIBAN } from "ibantools"
 
 import Datepicker from 'vue3-date-time-picker'
 import 'vue3-date-time-picker/dist/main.css'
 
-import { defineProps, defineEmits, ref, computed,  onMounted,
+import { defineProps, defineEmits, ref, computed,  onMounted, watch
 //reactive,
 } from 'vue'
 
@@ -207,18 +236,18 @@ const props = defineProps({
 })
 
 
-const serieFactura = ref('FFZC00');
-const numarFactura = ref('0001');
-const lunaIni = ref({month: 0, year: 2000});
-const lunaFin = ref({month: 0, year: 2000});
+//const serieFactura = ref('FFZC00');
+
+
 
 onMounted(() => {
-   lunaIni.value.month = moment(props.factura.LunaIni, 'YYYYMM').month()
-   lunaIni.value.year = moment(props.factura.LunaIni, 'YYYYMM').year()
-   lunaFin.value.month = moment(props.factura.LunaFin, 'YYYYMM').month()
-   lunaFin.value.year = moment(props.factura.LunaFin, 'YYYYMM').year()
-   serieFactura.value = props.factura.SerieNumar.substr(0,6)
-   numarFactura.value = props.factura.SerieNumar.substr(7,4)
+ //  lunaIni.value.month = moment(props.factura.LunaIni, 'YYYYMM').month()
+ //  lunaIni.value.year = moment(props.factura.LunaIni, 'YYYYMM').year()
+//   lunaFin.value.month = moment(props.factura.LunaFin, 'YYYYMM').month()
+ //  lunaFin.value.year = moment(props.factura.LunaFin, 'YYYYMM').year()
+ //  serieFactura.value = props.factura.SerieNumar.substr(0,6)
+ //  numarFactura.value = props.factura.SerieNumar.substr(7,4)
+ //  console.log(props.factura)
 })
 
 
@@ -234,13 +263,83 @@ var luni = m2.diff(m1, 'months');
 })
 
 
-const SerieFactura = computed(() => {
-
+ watch(
+  () => props.factura.Furnizor,
+  () => {
+ //   console.log(props.factura.Furnizor)
     var prefixFurnizor = props.furnizori.find((furnizor) => { return furnizor.id == props.factura.Furnizor }).prefix;
+    props.factura.SerieNumar = 'FF' + prefixFurnizor + props.factura.Data.substr(2,2) + '-' + props.factura.SerieNumar.substr(7,4)
+  }
+)
+ watch(
+  () => props.factura.Data,
+  () => {
+ //   console.log(props.factura.Data)
+    var prefixFurnizor = props.furnizori.find((furnizor) => { return furnizor.id == props.factura.Furnizor }).prefix;
+    props.factura.SerieNumar = 'FF' + prefixFurnizor + props.factura.Data.substr(2,2) + '-' + props.factura.SerieNumar.substr(7,4)
+  }
+)
 
-    console.log(props.furnizori[0])
-    return 'FF' + prefixFurnizor + props.factura.Data.substr(2,2)
-    //moment(props.factura.Data,'YYYY-MM-DD').format('YY')
+const SerieFactura = computed({
+    get () {
+        return props.factura.SerieNumar.substring(0, 6)
+    }
+    // ,
+    // set(value) {
+    //     var prefixFurnizor = props.furnizori.find((furnizor) => { return furnizor.id == props.factura.Furnizor }).prefix;
+    //     props.factura.SerieNumar = 'FF' + prefixFurnizor + props.factura.Data.substr(2,2) + ''
+    // }
+})
+
+
+const numarFactura = computed({
+    get () {
+        return props.factura.SerieNumar.substr(7,4)
+    },
+    set(value) {
+        props.factura.SerieNumar = props.factura.SerieNumar.substring(0, 6) + '-' + String(parseInt(value)).padStart(4, '0')
+    }
+})
+
+//const lunaIni = ref({month: 0, year: 2000});
+//const lunaFin = ref({month: 0, year: 2000});
+
+const lunaIni = computed({
+     get () {
+        return {month: moment(props.factura.LunaIni, 'YYYYMM').month(), year: moment(props.factura.LunaIni, 'YYYYMM').year()}
+    },
+    set (value) {
+        props.factura.LunaIni = String(value.year).padStart(4, '0')  + String(value.month + 1).padStart(2, '0')
+    }
+})
+
+const lunaFin = computed({
+     get () {
+        return {month: moment(props.factura.LunaFin, 'YYYYMM').month(), year: moment(props.factura.LunaFin, 'YYYYMM').year()}
+    },
+    set (value) {
+        props.factura.LunaFin = String(value.year).padStart(4, '0')  + String(value.month + 1).padStart(2, '0')
+    }
+})
+
+const FaraContract = computed({
+     get () {
+        return props.factura.FaraContract !=  0
+    },
+    set (value) {
+        props.factura.FaraContract = (value ?  1 : 0)
+    }
+})
+
+
+const NotaText = computed({
+    get () {
+        return props.factura.NotaText !=  0
+    },
+    set (value) {
+        props.factura.NotaText = (value ?  1 : 0)
+
+    }
 })
 
 const isProcessing = ref(false)
@@ -255,7 +354,7 @@ const validateSerieFactura = (value) => {
 
 }
 const validateNrFactura = (value) => {
-
+    return true;
 }
 const validateJudet = (value) => {
       // if the field is empty
@@ -275,8 +374,8 @@ const validateJudet = (value) => {
 
 const save = async () => {
     isProcessing.value = true
-        props.factura.LunaIni = moment('' + lunaIni.value.year + '-' + (lunaIni.value.month + 1)).format('YYYYMM')
-        props.factura.LunaFin = moment('' + lunaFin.value.year + '-' + (lunaFin.value.month + 1)).format('YYYYMM')
+  //      props.factura.LunaIni = moment('' + lunaIni.value.year + '-' + (lunaIni.value.month + 1)).format('YYYYMM')
+  //      props.factura.LunaFin = moment('' + lunaFin.value.year + '-' + (lunaFin.value.month + 1)).format('YYYYMM')
         console.log(props.factura)
         emit('save')
 

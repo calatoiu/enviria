@@ -7,6 +7,7 @@ use App\Components\RODate;
 
 class FacturaResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -15,15 +16,15 @@ class FacturaResource extends JsonResource
      */
     public function toArray($request)
     {
-//        dd($this->resource);
+        //        dd($this->resource);
         $result = parent::toArray($request);
         if($this->resource) {
             unset($result['Continut']);
             $result['Interval'] = RODate::getIntervalLuni($this->LunaIni, $this->LunaFin);
- //           $result['Sold'] = $this->Sold;
+            $result['Sold'] = $this->Sold;
         }
 //dd($result);
-         return $result;
-
+        return $result;
+ //       return parent::toArray($request);
     }
 }

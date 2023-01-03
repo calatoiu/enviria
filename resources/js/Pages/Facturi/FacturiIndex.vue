@@ -3,7 +3,7 @@
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
-                    Utilizatori
+                    Facturi
                 </h2>
             </div>
         </template>
@@ -18,33 +18,28 @@
                         </div>
                       </div>
                     </div>
-                    <button @click="openModal()" class="px-4 py-2 my-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">Create New User</button>
+                    <!-- <button @click="openModal()" class="px-4 py-2 my-3 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">Create New User</button> -->
                     <table class="w-full table-fixed">
                         <thead>
                             <tr class="bg-gray-100">
-                                <th class="px-4 py-2">Name</th>
-                                <th class="px-4 py-2">Email</th>
-                                <th class="px-4 py-2">Roles</th>
+                                <th class="px-4 py-2">SerieNumar</th>
+                                <th class="px-4 py-2">Data</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="user in props.users.data" :key="user.id">
-                                <td class="px-4 py-2 border">{{ user.name }}</td>
-                                <td class="px-4 py-2 border">{{ user.email }}</td>
-                                <td class="px-4 py-2 border">roles</td>
-                                <td class="px-4 py-2 border">
-                                    <button @click="editUser(user)" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">Edit</button>
-                                    <button @click="deleteUser(user)" class="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">Delete</button>
-                                </td>
+                            <tr v-for="factura in props.facturi.data" :key="factura.SerieNumar">
+                                <td class="px-4 py-2 border">{{ factura.SerieNumar }}</td>
+                                <td class="px-4 py-2 border">{{ factura.Data }}</td>
+
                             </tr>
                         </tbody>
                     </table>
-                    <div class="fixed inset-0 z-10 overflow-y-auto ease-out duration-400" v-if="isOpen">
+                    <!-- <div class="fixed inset-0 z-10 overflow-y-auto ease-out duration-400" v-if="isOpen">
                         <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                             <div class="fixed inset-0 transition-opacity">
                                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
                             </div>
-<!-- This element is to trick the browser into centering the modal contents. -->
+
                             <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>​
                             <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                                 <form>
@@ -83,7 +78,7 @@
                                 </form>
                             </div>
                       </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -96,71 +91,72 @@ import Button from '@/Components/Button'
 import { GithubIcon } from '@/Components/Icons/brands'
 import { defineProps, reactive, onMounted, ref  } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
-import { useForm } from '@inertiajs/inertia-vue3';
+//import { useForm } from '@inertiajs/inertia-vue3';
 
 const props = defineProps({
-    users: Object,
+    facturi: Object,
     errors: Object
 })
 
 
 const editMode = ref(false)
-const isOpen = ref(false)
-const form = useForm({
-    name: '',
-    email: '',
-    id: '',
-})
+//const isOpen = ref(false)
+// const form = useForm({
+//     name: '',
+//     email: '',
+//     id: '',
+// })
 
 onMounted(() => {
+    console.log('FacturiIndex')
     console.log(usePage().props.value.flash)
 })
 
-const openModal = () => {
-        isOpen.value = true
-    }
-const closeModal = () => {
-    isOpen.value = false
-    reset()
-    editMode.value = false;
-}
+// const openModal = () => {
+//         isOpen.value = true
+//     }
+// const closeModal = () => {
+//     isOpen.value = false
+//     reset()
+//     editMode.value = false;
+// }
 
-const reset = () => {
-    form.reset()
-}
+// const reset = () => {
+//     form.reset()
+// }
 
-const save = (form) => {
-    form.post('/users')
-    reset();
-    closeModal();
-    editMode.value = false;
-}
+// const save = (form) => {
+//     form.post('/users')
+//     reset();
+//     closeModal();
+//     editMode.value = false;
+// }
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    })
-}
+// const submit = () => {
+//     form.post(route('register'), {
+//         onFinish: () => form.reset('password', 'password_confirmation'),
+//     })
+// }
 
-const editUser = (user) => {
-    form.name = user.name
-    form.email = user.email
-    form.id = user.id
-    editMode.value = true;
-    openModal();
-}
-const update = () => {
- //   form.put('/users/'+ form.id)
-    reset()
-    closeModal()
-}
+// const editUser = (user) => {
+//     form.name = user.name
+//     form.email = user.email
+//     form.id = user.id
+//     editMode.value = true;
+//     openModal();
+// }
+// const update = () => {
+//  //   form.put('/users/'+ form.id)
+//     reset()
+//     closeModal()
+// }
 
-const deleteUser = (user) => {
-    if (!confirm('Are you sure want to remove?')) return;
-    form.delete('/users/' + user.id )
-  //  reset()
-  //  closeModal()
+// const deleteUser = (user) => {
+//     if (!confirm('Are you sure want to remove?')) return;
+//     form.delete('/users/' + user.id )
+//   //  reset()
+//   //  closeModal()
 
-}
-const store = () => {}
+// }
+// const store = () => {}
 </script>

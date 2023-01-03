@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\FacturaController;
 
 
 
@@ -35,8 +36,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route::get('/clienti', function () {
-//     return Inertia::render('Clienti/ClientiIndex');
-// })->middleware(['auth', 'verified'])->name('ClientiIndex');
+// })->middleware(['auth', 'verified'])->name('clienti');
 
 
 
@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
 
     Route::resource('clienti', ClientController::class);
+    Route::resource('facturi', FacturaController::class);
 });
 
 

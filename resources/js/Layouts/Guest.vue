@@ -18,7 +18,7 @@
             </div>
         </main>
 
-        <PageFooter />
+        <!-- <PageFooter /> -->
 
         <div class="fixed right-10 top-10">
             <Button

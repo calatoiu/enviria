@@ -28,11 +28,11 @@
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 px-4 sm:px-6">
+            <main class="flex-1 px-0 sm:px-0">
                 <slot />
             </main>
 
-            <PageFooter />
+            <!-- <PageFooter /> -->
         </div>
     </div>
 </template>

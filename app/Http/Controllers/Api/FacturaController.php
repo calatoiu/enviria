@@ -20,7 +20,7 @@ class FacturaController extends Controller
 	public function indexcui($CUI)
 	{
         $client = Client::with('facturi')->find($CUI);
-        return FacturaResource::collection($client->facturi()->get());
+        return FacturaResource::collection($client->facturi()->get()->sortByDesc('Data'));
 	}
 
 	public function textfactura()

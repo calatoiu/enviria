@@ -31,7 +31,7 @@ const input = ref(null)
 const emit = defineEmits(['update:modelValue'])
 
 const focus = () => {
-    console.log(modelValue.value)
+//    console.log(modelValue.value)
     select.value.focus()
 }
 </script>

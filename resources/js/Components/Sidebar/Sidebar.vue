@@ -1,4 +1,5 @@
 <template>
+<!-- side bar -->
     <transition
         enter-active-class="transition"
         enter-from-class="opacity-0"
@@ -31,8 +32,11 @@
         @mouseenter="sidebarState.handleHover(true)"
         @mouseleave="sidebarState.handleHover(false)"
     >
+    <!-- SidebarHeader -->
         <SidebarHeader />
+    <!-- SidebarContent -->
         <SidebarContent />
+    <!-- SidebarFooter -->
         <SidebarFooter />
     </aside>
 </template>

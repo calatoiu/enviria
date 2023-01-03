@@ -29,105 +29,64 @@
                 <legend class="text-sm font-bold text-gray-700 dark:text-gray-300">
                     <div class="px-0.5"  > Contract </div>
                 </legend>
+
                 <div class="flex gap-y-3.5 justify-items-start flex-row flex-wrap items-end justify-between">
-<!-- Nr Contract -->
-                    <div class="flex-auto pr-4 basis-1/3">
-                        <div class="flex items-end pb-0.5">
-                            <Label class="flex-none" for="nrcontract" value="Număr" />
-                        </div>
-                        <InputIconWrapper>
-                            <template #icon>
-                                <PencilAltIcon aria-hidden="true" class="w-5 h-5" />
-                            </template>
-                            <InputVee withIcon name="nrcontract" id="nrcontract" type="text" class="block w-full" placeholder="Număr contract" v-model="props.client.NrContract" :rules="validateNrContract"/>
-                        </InputIconWrapper>
-                        <ErrorMessage class="text-sm text-red-700" name="nrcontract" />
-                    </div>  <!--  Nr Contract end -->
+                    <ClientField name="nrcontract" label="Număr" v-model="props.client.NrContract" :rules="validateNrContract"  :class="['basis-1/3']"/>
 
-<!-- Data Contract -->
-                    <div class="flex-auto pr-4 basis-2/3">
-                        <div class="flex items-end pb-0.5">
-                            <Label class="flex-none" for="datacontract" value="Data contract" />
-                        </div>
+                    <InputLabelIconWrapper name="datacontract" label="Data contract" novalidate :class="['basis-2/3']">
                         <Datepicker
-                            name="datacontract" id="datacontract"
-                            v-model="props.client.DataContract"
-                            locale="ro-RO" cancelText="renunță" selectText="selectează"
-                        minDate="2010-01-01"
-                        :maxDate = "new Date()"
-                        :enableTimePicker="false"
-                        :dark="isDark"
-                        format="yyyy-MM-dd"
-                        inputClassName="placeholder:italic placeholder:text-slate-400 placeholder:text-xs"
-                        placeholder="Data contract"
-                        autoApply
-                        ></Datepicker>
-                    </div> <!--  Data Contract end -->
+                                    name="datacontract" id="datacontract"
+                                    :modelValue="props.client.DataContract"
+                                    @update:modelValue="setDate"
+                                    locale="ro-RO" cancelText="renunță" selectText="selectează"
+                                minDate="2010-01-01"
+                                :maxDate = "new Date()"
+                                :enableTimePicker="false"
+                                :dark="isDark"
+                                format="yyyy-MM-dd"
+                                previewFormat="yyyy-MM-dd"
+                                inputClassName="placeholder:italic placeholder:text-slate-400 placeholder:text-xs"
+                                placeholder="Data contract"
+                                autoApply
+                                >
+                        </Datepicker>
+                    </InputLabelIconWrapper>
 
-<!-- Valoare Contract -->
-                    <div class="flex-auto pr-4 basis-1/2">
-                        <div class="flex items-end pb-0.5">
-                            <Label class="flex-none" for="valoarecontract" value="Valoare" />
-                        </div>
-                        <InputIconWrapper>
-                            <template #icon>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        class="w-6 h-6">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="1"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                        </path>
-                                    </svg>
-                            </template>
-                            <InputVee withIcon name="valoarecontract" id="valoarecontract" type="text" class="block w-full" placeholder="Valoare contract" v-model="props.client.Valoare" :rules="validateValoareContract"/>
-                        </InputIconWrapper>
-                        <ErrorMessage class="text-sm text-red-700" name="valoarecontract" />
-                    </div>  <!--  Valoare Contract end -->
+                    <ClientField name="valoarecontract" label="Valoare" v-model="props.client.Valoare" :rules="validateValoareContract"  :class="['basis-1/3']">
+                        <template #icon>
+                            <LeiIcon  aria-hidden="true" class="w-5 h-5" />
+                        </template>
+                    </ClientField>
+
 <!-- Furnizor -->
-                    <div class="flex-auto pr-4 basis-1/2">
-                        <div class="flex items-end pb-0.5">
-                            <Label class="flex-none" for="furnizor" value="Furnizor" />
-                        </div>
-                        <InputIconWrapper>
+                    <InputLabelIconWrapper name="furnizor" label="Furnizor" novalidate :class="['basis-1/3']">
                             <template #icon>
-                                <SelectorIcon aria-hidden="true" class="w-5 h-5" />
+                                <SelectorIcon  aria-hidden="true" class="w-5 h-5"  />
                             </template>
                             <Select withIcon name="furnizor" id="furnizor" class="block w-full" placeholder="Furnizor"
                                 v-model="props.client.Furnizor"
                                 :items="props.furnizori"
                             />
-                        </InputIconWrapper>
-                    </div>  <!--  Furnizor end -->
+                    </InputLabelIconWrapper>
 <!-- Note -->
-                    <div class="flex-auto pr-4 basis-1/2">
-                        <div class="flex items-end pb-0.5">
-                            <Label class="flex-none" for="valoarecontract" value="Note" />
-                        </div>
-                        <InputIconWrapper>
-                            <template #icon>
-                                <DocumentTextIcon aria-hidden="true" class="w-5 h-5" />
-                            </template>
-                            <Textarea withIcon name="note" id="note" class="block w-full" placeholder="Note..." v-model="props.client.Note"/>
-                        </InputIconWrapper>
-                        <ErrorMessage class="text-sm text-red-700" name="note" />
-                    </div>  <!--  Note end -->
+                    <InputLabelIconWrapper name="note" label="Note" :class="['basis-1/2']">
+                        <template #icon>
+                            <DocumentTextIcon aria-hidden="true" class="w-5 h-5" />
+                        </template>
+                        <InputVee as="textarea" withIcon name="note" id="note" class="block w-full" placeholder="Note..." v-model="props.client.Note" :rules="validateNrContract"/>
+                    </InputLabelIconWrapper>
                 </div>
             </fieldset>
        </div>
 
-        <div class="flex px-4 px-6 py-3 bg-gray-50 dark:bg-dark-eval-1 gap-y-3.5 flex-row flex-wrap items-end justify-between">
-            <Button variant="primary" type="button" class="justify-center w-32 w-full gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="save">
+        <div class="flex px-6 py-3 bg-gray-50 dark:bg-dark-eval-1 gap-y-3.5 flex-row flex-wrap items-end justify-between">
+            <Button variant="primary" type="button" class="justify-center w-32 gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="save">
                     <SaveIcon aria-hidden="true" :class="iconSizeClasses" />
                     <span>Salvare</span>
             </Button>
 
 
-            <Button variant="secondary" type="button" class="justify-center w-32 w-full gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}" v-show="props.editMode" @click="closeModal">
+            <Button variant="secondary" type="button" class="justify-center w-32 gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}" v-show="props.editMode" @click="closeModal">
                     <XIcon aria-hidden="true" :class="iconSizeClasses" />
                     <span>Anulare</span>
             </Button>
@@ -142,18 +101,19 @@
 import Button from '@/Components/Button'
 import Input from '@/Components/Input'
 import Select from '@/Components/Select'
-import Textarea from '@/Components/Textarea'
 import InputVee from '@/Components/InputVee'
 import Label from '@/Components/Label'
 import AnafField from './AnafField'
 import ClientField from './ClientField'
 import ViewField from './ViewField'
 import InputIconWrapper from '@/Components/InputIconWrapper'
+import InputLabelIconWrapper from '@/Components/InputLabelIconWrapper'
 import { DocumentTextIcon, SelectorIcon, PlusIcon, PlusCircleIcon, SearchIcon, PencilAltIcon, SaveIcon, XIcon, ChevronDoubleDownIcon, CurrencyDollarIcon} from '@heroicons/vue/outline'
 import { isValidIBAN } from "ibantools"
 
 import Datepicker from 'vue3-date-time-picker'
 import 'vue3-date-time-picker/dist/main.css'
+import { LeiIcon } from '@/Components/Icons/outline'
 
 import { defineProps, defineEmits, ref, computed,
 //reactive,
@@ -243,12 +203,6 @@ const validateBanca = (value) => {
       if (!value) {
         return 'This field is required';
       }
-      // if the field is not a valid email
-    //   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    //   if (!regex.test(value)) {
-    //     return 'This field must be a valid email';
-    //   }
-      // All is good
       return true;
 }
 const validateContBancar = (value) => {
@@ -260,28 +214,31 @@ const validateContBancar = (value) => {
       return true;
 }
 const validateValoareContract = (value) => {
+
       return true;
 }
 const validateNrContract = (value) => {
+    if (!value) {
+        return 'Numărul de contract trebuie completat';
+      }
       return true;
 }
+const setDate = (value) => {
+//    console.log(value.constructor)
+    try {
+        props.client.DataContract = value.toISOString().slice(0, 10);
+    } catch (error) {
+        props.client.DataContract = '';
+    }
 
-const copyDenumire = () => {
-    console.log("copyDenumire")
-    console.log("props.anaf.Denumire", props.anaf.Denumire)
-    console.log("props.client.Denumire", props.client.Denumire)
-   props.client.Denumire = props.anaf.Denumire
-       console.log("props.anaf.Denumire", props.anaf.Denumire)
-    console.log("props.client.Denumire", props.client.Denumire)
 }
+
 
 const save = async () => {
     isProcessing.value = true
-
-        emit('save')
-
+  //  console.log('DataContract' , props.client.DataContract)
+    emit('save')
     isProcessing.value = false
 }
-
 
 </script>
