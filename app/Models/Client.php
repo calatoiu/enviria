@@ -51,9 +51,11 @@ class Client extends Model
 
     public function punctelucru()
     {
-        return $this->hasMany(Punctlucru::class, 'CIF', 'CIF')
-            ->orderBy('PunctLucruID', 'DESC')
-            ->select(['PunctLucruID', 'Denumire', 'NrAM', 'DataAM', 'DataRevAM', 'NotaAM']);
+        return $this->hasMany(Punctlucru::class, 'CIF', 'CIF')//->hasOne(Autorizatie::class, 'PunctLucruID', 'PunctLucruID')
+            ->leftjoin('autorizatie', 'autorizatie.PunctLucruID', '=', 'punctlucru.PunctLucruID')
+            ->orderBy('PunctLucruID', 'ASC')
+            ->select(['punctlucru.PunctLucruID', 'Pass', 'Denumire', 'DateContact', 'Localitate',	'Adresa', 'Telefon', 'Email', 'CAEN', 'NrSalariati','autorizatie.Nr','autorizatie.Data']);
+
     }
 
     public function facturineachitate()

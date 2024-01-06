@@ -37,7 +37,11 @@ class ClientController extends Controller
         $client = Client::whereCif($CIF)->first();
 		return new ClientResource($client);
 	}
+	public function info()
+	{
 
+		return phpinfo();
+	}
     public function anaf($cif)
     {
      // $this->middleware('web');

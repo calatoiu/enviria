@@ -1,0 +1,13 @@
+contract:
+ClientID - ID
+FurnizorID - ID
+Numar - str
+Data - Date
+Descriere - str
+Text factura - str
+Sezonier - bool
+Luni1 str
+Valoare1 - real
+Luni2 str
+Valoare2 - real
+Stare: Activ, Incetat, Suspendat, Expirat

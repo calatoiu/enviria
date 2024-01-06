@@ -25,7 +25,7 @@ class FurnizorRequest extends FormRequest
     {
         return [
             'id' => ['required', 'string' ],
-            'CIF' => ['required', 'integer' ],
+            'CUI' => ['required', 'integer' ],
             'Denumire' => ['required', 'string'],
             'ContBancar' => ['nullable','string'],
             'Banca' => ['nullable','string'],

@@ -8,8 +8,11 @@
         <div class="flex-auto overflow-auto shadow-lg h-5/6">
             <div class="w-full text-xs">
                 <div class="flex w-full py-3 my-2 rounded shadow-md cursor-pointer hover:shadow-xl hover:bg-gray-200 dark:hover:bg-gray-600" v-for="punctlucru in props.punctelucru" :key="punctlucru.CIF" @click="viewPunctLucru(punctlucru.PunctLucruID)">
-                    <div class="w-[90px] px-1">{{punctlucru.PunctLucruID}}</div>
+                    <div class="w-[120px] px-1">{{punctlucru.PunctLucruID}}</div>
                     <div class="w-[85px] px-1">{{punctlucru.Denumire}}</div>
+                    <div class="w-[85px] px-1">{{punctlucru.Pass}}</div>
+                    <div v-if="punctlucru.Nr" class="w-[100px] px-1">{{punctlucru.Nr}}/{{punctlucru.Data}} </div>
+                    <div v-else> &nbsp; </div>
                 </div>
             </div>
         </div>

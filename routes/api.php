@@ -33,11 +33,13 @@ Route::get('/anaf/{CIF}', [ClientController::class, 'anaf'])->middleware('web');
 Route::put('/clienti/{CIF}', [ClientController::class, 'updatecif']);
 Route::put('/addclient', [ClientController::class, 'store']);
 Route::get('/clienti/confirmaresold/{CIF}/{Data}', [ClientController::class, 'confirmaresold']);
-
+Route::get('/info', [ClientController::class, 'info']);
 
 Route::get('/facturi/{CUI}', [FacturaController::class, 'indexcui']);
 Route::get('/facturahtml/{SerieNumar}', [FacturaController::class, 'facturahtml']);
 Route::get('/facturapdf/{SerieNumar}', [FacturaController::class, 'facturapdf']);
+Route::get('/facturaxml/{SerieNumar}', [FacturaController::class, 'facturaxml']);
+Route::get('/facturaxmlupload/{SerieNumar}', [FacturaController::class, 'facturaxmlupload']);
 Route::get('/factura/{SerieNumar}', [FacturaController::class, 'showw']);
 Route::get('/newfactura/{CUI}', [FacturaController::class, 'newfactura']);
 Route::get('/textfactura', [FacturaController::class, 'textfactura']);
@@ -48,3 +50,4 @@ Route::get('/furnizori', [FurnizorController::class, 'index']);
 Route::get('/facturahtmlraw', [FacturaController::class, 'facturahtmlraw']);
 
 Route::get('/punctelucru/{CUI}', [PunctlucruController::class, 'indexcui']);
+Route::get('/punctlucru/{PunctlucruID}', [PunctlucruController::class, 'show']);

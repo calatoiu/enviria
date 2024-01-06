@@ -34,6 +34,10 @@
                 <DocumentIcon aria-hidden="true" :class="iconSizeClasses" />
                 <span>PDF</span>
             </Button>
+            <Button variant="primary" type="button" class="justify-center w-32 gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="downloadXML">
+                <DocumentIcon aria-hidden="true" :class="iconSizeClasses" />
+                <span>XML</span>
+            </Button>
             <Button variant="secondary" type="button" class="justify-center w-32 gap-2" :disabled="isProcessing" v-slot="{iconSizeClasses}"  @click="edit">
                     <PencilIcon aria-hidden="true" :class="iconSizeClasses" />
                     <span>Editare</span>
@@ -83,6 +87,21 @@ const downloadPDF = async () => {
     isProcessing.value = true
     axios({
         url: '/api/facturapdf/' + props.SerieNumar,
+        method: 'GET',
+        responseType: 'blob', // important
+    }).then((response) => {
+        let filename = response.headers['content-disposition'].split(';')[1].split('=')[1].replaceAll('"','')
+        console.log(filename)
+        saveAs(response.data, filename);
+    });
+
+    isProcessing.value = false
+}
+
+const downloadXML = async () => {
+    isProcessing.value = true
+    axios({
+        url: '/api/facturaxml/' + props.SerieNumar,
         method: 'GET',
         responseType: 'blob', // important
     }).then((response) => {

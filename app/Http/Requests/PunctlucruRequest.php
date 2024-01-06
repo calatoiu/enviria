@@ -35,10 +35,6 @@ class PunctlucruRequest extends FormRequest
             'Email' => ['nullable', 'string'],
             'CAEN' => ['nullable', 'string'],
             'NrSalariati' => ['required', 'integer' ],
-            'NrAM' => ['nullable', 'string'],
-            'DataAM' => ['nullable', 'string'],
-            'DataRevAM' => ['nullable', 'string'],
-            'NotaAM' => ['nullable', 'string'],
         ];
     }
 }

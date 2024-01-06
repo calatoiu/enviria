@@ -22,10 +22,6 @@ class Punctlucru extends Model
     'Email',
     'CAEN',
     'NrSalariati',
-    'NrAM',
-    'DataAM',
-    'DataRevAM',
-    'NotaAM',
 ];
     protected $table = 'punctlucru';
     protected $primaryKey = 'PunctLucruID';
@@ -35,5 +31,10 @@ class Punctlucru extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'CIF', 'CIF');
+    }
+
+    public function autorizatie()
+    {
+        return $this->hasOne(Autorizatie::class, 'PunctLucruID','PunctLucruID');
     }
 }

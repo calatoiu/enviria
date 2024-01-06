@@ -21442,6 +21442,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       };
     }();
 
+    var downloadXML = /*#__PURE__*/function () {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                isProcessing.value = true;
+                axios({
+                  url: '/api/facturaxml/' + props.SerieNumar,
+                  method: 'GET',
+                  responseType: 'blob' // important
+
+                }).then(function (response) {
+                  var filename = response.headers['content-disposition'].split(';')[1].split('=')[1].replaceAll('"', '');
+                  console.log(filename);
+                  (0,file_saver__WEBPACK_IMPORTED_MODULE_3__.saveAs)(response.data, filename);
+                });
+                isProcessing.value = false;
+
+              case 3:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }));
+
+      return function downloadXML() {
+        return _ref4.apply(this, arguments);
+      };
+    }();
+
     var facturaContainer = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(null);
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
       facturaContainer.value.scrollTop = facturaContainer.value.scrollHeight;
@@ -21454,6 +21486,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       closeModal: closeModal,
       edit: edit,
       downloadPDF: downloadPDF,
+      downloadXML: downloadXML,
       facturaContainer: facturaContainer,
       Button: _Components_Button__WEBPACK_IMPORTED_MODULE_1__["default"],
       DocumentIcon: _heroicons_vue_outline__WEBPACK_IMPORTED_MODULE_4__["default"],
@@ -22926,6 +22959,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
+ //import PunctlucruView from '@/Components/Punctlucru/PunctlucruView'
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
@@ -23756,6 +23790,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     //====Punct Lucru =======
 
 
+    var currentPunctlucru = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)({});
+    var cPunctlucru = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)({}); //const currentEditPunctlucru = ref({})
+
+    var isOpenPunctlucruView = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false);
+
     var adaugaPunctLucru = /*#__PURE__*/function () {
       var _ref25 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee24() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee24$(_context24) {
@@ -23778,14 +23817,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }();
 
     var viewPunctLucru = /*#__PURE__*/function () {
-      var _ref26 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee25() {
+      var _ref26 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee25(punctlucru) {
+        var msg,
+            _args25 = arguments;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee25$(_context25) {
           while (1) {
             switch (_context25.prev = _context25.next) {
               case 0:
-                console.log('==Deschide punct lucru==');
+                msg = _args25.length > 1 && _args25[1] !== undefined ? _args25[1] : '';
+                isProcessing.value = true;
+                console.log('aaaaaa');
+                cPunctlucru.value = punctlucru;
+                _context25.next = 6;
+                return getPunctlucru(punctlucru.PunctLucruID);
 
-              case 1:
+              case 6:
+                currentPunctlucru.value = _context25.sent;
+                isOpenPunctlucruView.value = true;
+                isProcessing.value = false;
+
+              case 9:
               case "end":
                 return _context25.stop();
             }
@@ -23793,8 +23844,66 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee25);
       }));
 
-      return function viewPunctLucru() {
+      return function viewPunctLucru(_x13) {
         return _ref26.apply(this, arguments);
+      };
+    }();
+
+    var getPunctlucru = /*#__PURE__*/function () {
+      var _ref27 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee26(PunctLucruID) {
+        var response;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee26$(_context26) {
+          while (1) {
+            switch (_context26.prev = _context26.next) {
+              case 0:
+                _context26.next = 2;
+                return axios.get('/api/punctlucru/' + PunctLucruID);
+
+              case 2:
+                response = _context26.sent;
+                return _context26.abrupt("return", response.data.data);
+
+              case 4:
+              case "end":
+                return _context26.stop();
+            }
+          }
+        }, _callee26);
+      }));
+
+      return function getPunctlucru(_x14) {
+        return _ref27.apply(this, arguments);
+      };
+    }();
+
+    var closePunctlucruView = function closePunctlucruView() {
+      isOpenPunctlucruView.value = false;
+    };
+
+    var editPunctlucru = /*#__PURE__*/function () {
+      var _ref28 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee27() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee27$(_context27) {
+          while (1) {
+            switch (_context27.prev = _context27.next) {
+              case 0:
+                //  isProcessing.value = true
+                console.log('editPunctlucru:cPunctlucru ' + cPunctlucru.value.PunctlucruID); // currentAnaf.value =  await getAnaf(cClient.value.CIF)
+                //  currentEditClient.value = await getClient(cClient.value.CIF)
+                // editMode.value = true;
+                // isOpenClientView.value = false
+                // isOpenClientForm.value = true
+                //  isProcessing.value = false
+
+              case 1:
+              case "end":
+                return _context27.stop();
+            }
+          }
+        }, _callee27);
+      }));
+
+      return function editPunctlucru() {
+        return _ref28.apply(this, arguments);
       };
     }(); //===End Punct Lucru
 
@@ -23852,8 +23961,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       editFactura: editFactura,
       saveFactura: saveFactura,
       closeFacturaForm: closeFacturaForm,
+      currentPunctlucru: currentPunctlucru,
+      cPunctlucru: cPunctlucru,
+      isOpenPunctlucruView: isOpenPunctlucruView,
       adaugaPunctLucru: adaugaPunctLucru,
       viewPunctLucru: viewPunctLucru,
+      getPunctlucru: getPunctlucru,
+      closePunctlucruView: closePunctlucruView,
+      editPunctlucru: editPunctlucru,
       reactive: vue__WEBPACK_IMPORTED_MODULE_1__.reactive,
       onMounted: vue__WEBPACK_IMPORTED_MODULE_1__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_1__.ref,
@@ -25179,10 +25294,20 @@ var _hoisted_4 = {
 };
 var _hoisted_5 = ["onClick"];
 var _hoisted_6 = {
-  "class": "w-[90px] px-1"
+  "class": "w-[120px] px-1"
 };
 var _hoisted_7 = {
   "class": "w-[85px] px-1"
+};
+var _hoisted_8 = {
+  "class": "w-[85px] px-1"
+};
+var _hoisted_9 = {
+  key: 0,
+  "class": "w-[100px] px-1"
+};
+var _hoisted_10 = {
+  key: 1
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Button"], {
@@ -25218,7 +25343,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(punctlucru.Denumire), 1
     /* TEXT */
-    )], 8
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(punctlucru.Pass), 1
+    /* TEXT */
+    ), punctlucru.Nr ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(punctlucru.Nr) + "/" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(punctlucru.Data), 1
+    /* TEXT */
+    )) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, "   "))], 8
     /* PROPS */
     , _hoisted_5);
   }), 128
@@ -25996,11 +26125,15 @@ var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Editare", -1
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "XML", -1
 /* HOISTED */
 );
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Anulare", -1
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Editare", -1
+/* HOISTED */
+);
+
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Anulare", -1
 /* HOISTED */
 );
 
@@ -26036,15 +26169,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Button"], {
-    variant: "secondary",
+    variant: "primary",
     type: "button",
     "class": "justify-center w-32 gap-2",
     disabled: $setup.isProcessing,
-    onClick: $setup.edit
+    onClick: $setup.downloadXML
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function (_ref2) {
       var iconSizeClasses = _ref2.iconSizeClasses;
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["PencilIcon"], {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["DocumentIcon"], {
         "aria-hidden": "true",
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(iconSizeClasses)
       }, null, 8
@@ -26061,16 +26194,37 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "button",
     "class": "justify-center w-32 gap-2",
     disabled: $setup.isProcessing,
-    onClick: $setup.closeModal
+    onClick: $setup.edit
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function (_ref3) {
       var iconSizeClasses = _ref3.iconSizeClasses;
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["XIcon"], {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["PencilIcon"], {
         "aria-hidden": "true",
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(iconSizeClasses)
       }, null, 8
       /* PROPS */
       , ["class"]), _hoisted_11];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Button"], {
+    variant: "secondary",
+    type: "button",
+    "class": "justify-center w-32 gap-2",
+    disabled: $setup.isProcessing,
+    onClick: $setup.closeModal
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function (_ref4) {
+      var iconSizeClasses = _ref4.iconSizeClasses;
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["XIcon"], {
+        "aria-hidden": "true",
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(iconSizeClasses)
+      }, null, 8
+      /* PROPS */
+      , ["class"]), _hoisted_12];
     }),
     _: 1
     /* STABLE */
@@ -28066,7 +28220,13 @@ var _hoisted_14 = {
   key: 4,
   "class": "fixed inset-0 z-30 overflow-y-auto ease-out duration-400"
 };
+var _hoisted_15 = {
+  key: 5,
+  "class": "fixed inset-0 z-30 overflow-y-auto ease-out duration-400"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_PunctlucruView = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PunctlucruView");
+
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["AuthenticatedLayout"], {
     title: "Clienți"
   }, {
@@ -28193,7 +28353,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onSave: $setup.saveFactura
       }, null, 8
       /* PROPS */
-      , ["factura", "isadding", "furnizori", "client", "SerieNumar", "textFactura"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+      , ["factura", "isadding", "furnizori", "client", "SerieNumar", "textFactura"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.isOpenPunctlucruView ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PunctlucruView, {
+        punctelucru: $setup.currentPunctlucru,
+        onClose: $setup.closePunctlucruView,
+        onEdit: _cache[3] || (_cache[3] = function ($event) {
+          return $setup.editPunctlucru();
+        })
+      }, null, 8
+      /* PROPS */
+      , ["punctelucru"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1
     /* STABLE */

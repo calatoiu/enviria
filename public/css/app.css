@@ -986,6 +986,12 @@ select {
 .w-32 {
   width: 8rem;
 }
+.w-\[120px\] {
+  width: 120px;
+}
+.w-\[100px\] {
+  width: 100px;
+}
 .w-64 {
   width: 16rem;
 }

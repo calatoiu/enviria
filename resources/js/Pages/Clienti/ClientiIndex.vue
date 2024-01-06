@@ -68,6 +68,9 @@
             <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenFacturaForm">
                 <FacturaForm :factura="currentFactura" :isadding="isAddingFactura" :furnizori="furnizori" :client="currentClient"  :SerieNumar = "currentSerieNumar" :textFactura="textfactura"  @close="closeFacturaForm" @save="saveFactura" />
             </div>
+            <div class="fixed inset-0 z-30 overflow-y-auto ease-out duration-400" v-if="isOpenPunctlucruView">
+                <PunctlucruView  :punctelucru="currentPunctlucru" @close="closePunctlucruView" @edit="editPunctlucru()" />
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>
@@ -88,6 +91,7 @@ import ClientView  from '@/Components/Client/ClientView'
 import FacturaView from '@/Components/Factura/FacturaView'
 import FacturaForm from '@/Components/Factura/FacturaForm'
 
+//import PunctlucruView from '@/Components/Punctlucru/PunctlucruView'
 
 const props = defineProps({
     clienti: Object,
@@ -407,13 +411,44 @@ const closeFacturaForm = async ()=>{
 
 //====Punct Lucru =======
 
+const currentPunctlucru = ref({})
+const cPunctlucru = ref({})
+//const currentEditPunctlucru = ref({})
+const isOpenPunctlucruView = ref(false)
+
 const adaugaPunctLucru = async ()=>{
     console.log('==Adauga punct lucru==')
 }
 
-const viewPunctLucru = async ()=>{
-    console.log('==Deschide punct lucru==')
+const viewPunctLucru = async (punctlucru, msg = '')=>{
+    isProcessing.value = true
+    console.log('aaaaaa')
+    cPunctlucru.value = punctlucru
+    currentPunctlucru.value = await getPunctlucru(punctlucru.PunctLucruID)
+    isOpenPunctlucruView.value = true
+    isProcessing.value = false
 }
 
+
+const getPunctlucru = async (PunctLucruID) => {
+    let response = await axios.get('/api/punctlucru/' + PunctLucruID)
+    return response.data.data
+}
+
+const closePunctlucruView = ()=>{
+    isOpenPunctlucruView.value = false
+}
+
+
+const editPunctlucru = async ()=>{
+  //  isProcessing.value = true
+    console.log('editPunctlucru:cPunctlucru ' + cPunctlucru.value.PunctlucruID)
+   // currentAnaf.value =  await getAnaf(cClient.value.CIF)
+  //  currentEditClient.value = await getClient(cClient.value.CIF)
+   // editMode.value = true;
+   // isOpenClientView.value = false
+   // isOpenClientForm.value = true
+  //  isProcessing.value = false
+}
 //===End Punct Lucru
 </script>
